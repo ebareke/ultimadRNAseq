@@ -2,9 +2,9 @@ process ELIGOS_PAIRDIFF {
     tag   "$meta.id"
     label 'process_medium'
 
-    // ELIGOS2 has no Bioconda recipe — use the author's image (pin a digest on
-    // your target system). No conda fallback available.
-    container 'docker.io/piroonj/eligos2:latest'
+    // ELIGOS2 has no Bioconda recipe — use the author's image. Pinned to a tag;
+    // pin to an immutable digest (@sha256:...) on your target system. No conda fallback.
+    container 'docker.io/piroonj/eligos2:v2.1.0'
 
     input:
     // meta.id = "<test>_vs_<control>"

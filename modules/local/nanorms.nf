@@ -2,10 +2,9 @@ process NANORMS {
     tag   "$meta.id"
     label 'process_medium'
 
-    // nanoRMS ships as a GitHub repo of Python/R scripts with no Bioconda
-    // recipe or official image. Build a custom container from its repo and pin
-    // it here before real runs; the placeholder below only satisfies stub wiring.
-    container 'docker.io/ebareke/nanorms:placeholder'
+    // nanoRMS (novoalab/nanoRMS) — no Bioconda recipe. Container-only; build with
+    // containers/nanorms/Dockerfile (pin NANORMS_REF). See docs/containers.md.
+    container 'docker.io/ebareke/nanorms:2.0'
 
     input:
     // meta.id = "<test>_vs_<control>"
@@ -43,7 +42,7 @@ process NANORMS {
     echo -e "ref\\tpos\\tstrand\\tmod_stoichiometry_test\\tmod_stoichiometry_control\\tdelta" > ${prefix}/${prefix}.stoichiometry.tsv
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        nanoRMS: placeholder
+        nanoRMS: 2.0
     END_VERSIONS
     """
 }

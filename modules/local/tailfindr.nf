@@ -2,11 +2,10 @@ process TAILFINDR {
     tag   "$meta.id"
     label 'process_high'
 
-    // tailfindr is an R package distributed via GitHub (adnaniazi/tailfindr) with
-    // no Bioconda recipe or official image. Build a custom container (R + tailfindr)
-    // and pin it before real runs; the placeholder only satisfies stub wiring.
+    // tailfindr (adnaniazi/tailfindr R package) — no Bioconda recipe. Container-only;
+    // build with containers/tailfindr/Dockerfile (pin TAILFINDR_REF). See docs/containers.md.
     // NOTE: tailfindr reads raw FAST5 signal — provide FAST5 (POD5 needs conversion).
-    container 'docker.io/ebareke/tailfindr:placeholder'
+    container 'docker.io/ebareke/tailfindr:1.4'
 
     input:
     tuple val(meta), path(signal_dir)
@@ -40,7 +39,7 @@ process TAILFINDR {
     echo "read_id,tail_start,tail_end,samples_per_nt,tail_length,file_path" > ${prefix}.tails.csv
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        tailfindr: placeholder
+        tailfindr: 1.4
     END_VERSIONS
     """
 }

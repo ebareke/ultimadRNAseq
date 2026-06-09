@@ -5,6 +5,17 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed — container hardening
+- Replaced placeholder/`:latest` container tags with pinned, buildable images:
+  - RATTLE → `ebareke/rattle:1.0` (`containers/rattle/Dockerfile`)
+  - tailfindr → `ebareke/tailfindr:1.4` (`containers/tailfindr/Dockerfile`)
+  - nanoRMS → `ebareke/nanorms:2.0` (`containers/nanorms/Dockerfile`)
+  - ELIGOS → `piroonj/eligos2:v2.1.0` (pin to digest in production)
+- Added `containers/` with buildable Dockerfiles (pinned upstream `*_REF`) and
+  `docs/containers.md` (build/push, Apptainer, digest pinning). These tools are
+  container-only (no Bioconda); the `standard`/conda profile cannot run them.
+- Removed the gutted ex-SRS `test.txt`.
+
 ### Added
 - Phase 0 scaffolding: nf-core-style repo layout
 - Nextflow configuration with profiles: `standard`, `docker`, `apptainer`,

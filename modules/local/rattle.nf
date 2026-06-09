@@ -2,10 +2,9 @@ process RATTLE {
     tag   "$meta.id"
     label 'process_high'
 
-    // RATTLE (comprehensivegenomics/RATTLE) is a C++ GitHub tool with no
-    // Bioconda recipe / official image. Build a container and pin it before real
-    // runs; the placeholder only satisfies stub wiring.
-    container 'docker.io/ebareke/rattle:placeholder'
+    // RATTLE (comprehensivegenomics/RATTLE) — no Bioconda recipe. Container-only;
+    // build with containers/rattle/Dockerfile (pin RATTLE_REF). See docs/containers.md.
+    container 'docker.io/ebareke/rattle:1.0'
 
     input:
     tuple val(meta), path(fastq)
@@ -38,7 +37,7 @@ process RATTLE {
     printf '>transcript_1\\nACGTACGTACGT\\n' > ${prefix}.rattle_transcripts.fa
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        rattle: placeholder
+        rattle: 1.0
     END_VERSIONS
     """
 }
