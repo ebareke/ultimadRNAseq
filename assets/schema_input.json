@@ -1,0 +1,77 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/ebareke/directRNA/main/assets/schema_input.json",
+    "title": "directRNA pipeline - sample sheet schema",
+    "description": "Schema for the file provided with params.input",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "sample": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "Sample name must be provided and cannot contain spaces",
+                "meta": ["id"]
+            },
+            "condition": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "default": "none",
+                "errorMessage": "Condition must be a single token without spaces",
+                "meta": ["condition"]
+            },
+            "replicate": {
+                "type": ["integer", "string"],
+                "default": 1,
+                "errorMessage": "Replicate must be an integer",
+                "meta": ["replicate"]
+            },
+            "kit": {
+                "type": "string",
+                "enum": ["RNA002", "RNA004"],
+                "default": "RNA004",
+                "errorMessage": "Kit must be one of RNA002 or RNA004",
+                "meta": ["kit"]
+            },
+            "fastq": {
+                "type": "string",
+                "format": "file-path",
+                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
+                "errorMessage": "FASTQ must be a gzipped .fastq.gz / .fq.gz path",
+                "exists": true
+            },
+            "pod5_dir": {
+                "type": "string",
+                "format": "directory-path",
+                "errorMessage": "pod5_dir must be a directory containing .pod5 files",
+                "exists": true
+            },
+            "fast5_dir": {
+                "type": "string",
+                "format": "directory-path",
+                "errorMessage": "fast5_dir must be a directory containing .fast5 files",
+                "exists": true
+            },
+            "control": {
+                "type": ["boolean", "string"],
+                "default": false,
+                "errorMessage": "control must be true/false (IVT or untreated reference for background modelling)",
+                "meta": ["control"]
+            },
+            "organism": {
+                "type": "string",
+                "default": "unknown",
+                "meta": ["organism"]
+            }
+        },
+        "required": ["sample"],
+        "anyOf": [
+            { "required": ["fastq"] },
+            { "required": ["pod5_dir"] },
+            { "required": ["fast5_dir"] }
+        ],
+        "errorMessage": {
+            "anyOf": "At least one input must be provided per sample: 'fastq', 'pod5_dir', or 'fast5_dir'"
+        }
+    }
+}

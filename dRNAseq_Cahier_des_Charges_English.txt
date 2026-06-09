@@ -1,0 +1,320 @@
+SOFTWARE REQUIREMENTS SPECIFICATION (CAHIER DES CHARGES)
+Direct RNA Sequencing (dRNA-seq) Analysis Workflow Platform
+Version 1.0
+
+1. PROJECT OVERVIEW
+
+The objective of this project is to design, develop, validate, deploy, and maintain a professional, production-grade workflow platform for the analysis of Oxford Nanopore Technologies (ONT) Direct RNA Sequencing (dRNA-seq) data.
+
+The platform shall support both reference-guided and de novo transcriptomic analysis strategies and shall integrate state-of-the-art tools for signal processing, quality control, alignment, isoform quantification, RNA modification detection, and poly(A) tail analysis.
+
+The resulting solution will be used by research laboratories and bioinformatics teams and must be suitable for reproducible scientific analyses, large-scale projects, and future extensibility.
+
+2. OBJECTIVES
+
+The workflow must:
+
+- Support ONT direct RNA sequencing datasets.
+- Accept POD5, FAST5, and FASTQ files as workflow entry points.
+- Provide both reference-guided and de novo analysis modes.
+- Offer modular execution where individual workflow components can be enabled or disabled.
+- Support local workstation, HPC cluster, and cloud deployments.
+- Be reproducible, versioned, and auditable.
+- Provide graphical and command-line access.
+- Generate publication-quality outputs and reports.
+
+3. SCOPE OF WORK
+
+The contractor shall:
+
+- Design the software architecture.
+- Implement the workflow.
+- Integrate all required third-party tools.
+- Develop workflow orchestration.
+- Create user interfaces.
+- Implement reporting and visualization.
+- Deliver testing and validation documentation.
+- Deliver installation and deployment documentation.
+- Provide source code and technical documentation.
+
+4. INPUT DATA REQUIREMENTS
+
+Supported input formats:
+
+A. Raw Signal Data
+- POD5
+- FAST5
+
+B. Basecalled Data
+- FASTQ
+
+C. Optional Inputs
+- Reference genome
+- Reference transcriptome
+- Annotation files (GTF/GFF3)
+- Synthetic or IVT control datasets
+- Sample metadata
+- Experimental design metadata
+
+5. FUNCTIONAL REQUIREMENTS
+
+5.1 Workflow Modes
+
+The platform shall support:
+
+A. Reference-Guided Workflow
+B. De Novo Transcript Discovery Workflow
+
+Users shall be able to execute:
+
+- Complete end-to-end workflow.
+- Individual workflow modules.
+- Partial workflow resumes from any completed stage.
+
+5.2 Signal Processing Module
+
+Tools:
+
+- Dorado (disabled by default)
+- f5c (disabled by default)
+- Uncalled4
+
+Requirements:
+
+- Support raw signal processing.
+- Basecalling using Dorado.
+- Event alignment / resquiggling support.
+- Signal-to-reference alignment.
+- Native RNA modification-aware processing.
+- GPU acceleration where supported.
+- Parameter customization through configuration files.
+
+5.3 Quality Control Module
+
+Tools:
+
+- NanoPlot
+- pycoQC
+- ToulligQC
+
+Requirements:
+
+Generate:
+
+- Read length distributions.
+- Quality score distributions.
+- Yield summaries.
+- Sequencing run metrics.
+- Interactive HTML reports.
+- Publication-quality figures.
+
+5.4 Alignment and Isoform Quantification Module
+
+Tools:
+
+- Minimap2
+- Salmon
+- Nexxons
+
+Requirements:
+
+- Genome alignment.
+- Transcriptome alignment.
+- Splice-aware mapping.
+- Transcript abundance estimation.
+- Isoform quantification.
+- Transcript-level quality control.
+- Export of standardized result files.
+
+5.5 RNA Modification Detection Module
+
+Tools:
+
+- m6anet
+- Nanocompore
+- nanoRMS
+- ELIGOS
+
+Requirements:
+
+Detection and quantification of:
+
+- m6A methylation.
+- Pseudouridylation.
+- Comparative modification signatures.
+- Transcriptome-wide epitranscriptomic variation.
+
+Outputs:
+
+- Site-level calls.
+- Transcript-level summaries.
+- Confidence scores.
+- Statistical significance metrics.
+- Visualization-ready outputs.
+
+5.6 Poly(A) Tail Analysis Module
+
+Tools:
+
+- nanopolish polya
+- tailfindr
+
+Requirements:
+
+- Poly(A) length estimation.
+- Poly(U) length estimation.
+- Per-read measurements.
+- Sample-level summaries.
+- Comparative analyses between samples.
+
+5.7 De Novo Analysis Module
+
+The platform shall support de novo workflows including:
+
+- Long-read transcript reconstruction.
+- Transcript clustering.
+- Novel isoform discovery.
+- Transcript abundance estimation.
+- Structural transcript characterization.
+
+The contractor may propose appropriate de novo assembly and transcript reconstruction tools compatible with ONT dRNA-seq data.
+
+6. WORKFLOW ARCHITECTURE REQUIREMENTS
+
+The workflow shall:
+
+- Be modular.
+- Support workflow versioning.
+- Support checkpointing.
+- Support automatic restart.
+- Support parallel execution.
+- Support scalable execution on large datasets.
+- Maintain complete provenance tracking.
+
+Preferred technologies:
+
+- Nextflow and/or Snakemake.
+- Docker and/or Apptainer/Singularity.
+- Conda or equivalent dependency management.
+
+The contractor may propose alternative technologies provided equivalent functionality is demonstrated.
+
+7. USER INTERFACE REQUIREMENTS
+
+The solution shall provide:
+
+A. Command-Line Interface (CLI)
+
+- Full workflow execution.
+- Configuration management.
+- Batch execution.
+
+B. Graphical Interface (Preferred)
+
+- Project creation.
+- Workflow execution.
+- Monitoring.
+- Result visualization.
+- Report generation.
+
+8. REPORTING REQUIREMENTS
+
+The platform shall generate:
+
+- HTML reports.
+- PDF reports.
+- Structured machine-readable outputs.
+
+Reports shall include:
+
+- QC metrics.
+- Alignment metrics.
+- Quantification results.
+- RNA modification summaries.
+- Poly(A) analyses.
+- Workflow execution logs.
+- Software versions.
+- Parameter settings.
+
+9. DATA MANAGEMENT REQUIREMENTS
+
+The system shall:
+
+- Preserve raw data integrity.
+- Store intermediate results.
+- Support configurable retention policies.
+- Support project archiving.
+- Maintain metadata traceability.
+
+10. PERFORMANCE REQUIREMENTS
+
+The system shall:
+
+- Support GPU acceleration where available.
+- Support multicore CPU execution.
+- Handle datasets containing millions of reads.
+- Efficiently process large ONT datasets.
+- Scale from workstation to HPC environments.
+
+11. REPRODUCIBILITY REQUIREMENTS
+
+The system shall:
+
+- Record software versions.
+- Record workflow versions.
+- Record execution parameters.
+- Generate reproducibility manifests.
+- Support deterministic re-execution.
+
+12. VALIDATION REQUIREMENTS
+
+The contractor shall provide:
+
+- Unit tests.
+- Integration tests.
+- End-to-end workflow validation.
+- Benchmark datasets.
+- Validation reports.
+
+13. DOCUMENTATION REQUIREMENTS
+
+Deliverables shall include:
+
+- User manual.
+- Installation guide.
+- Administrator guide.
+- Developer documentation.
+- Workflow diagrams.
+- API documentation (if applicable).
+
+14. DELIVERABLES
+
+Required deliverables:
+
+1. Source code repository.
+2. Workflow implementation.
+3. Container definitions.
+4. Configuration templates.
+5. User interface.
+6. Validation package.
+7. Documentation package.
+8. Installation package.
+9. Training materials.
+10. Final acceptance report.
+
+15. ACCEPTANCE CRITERIA
+
+The project will be considered accepted when:
+
+- All required workflow modules are operational.
+- All specified tools are integrated.
+- POD5, FAST5, and FASTQ inputs are supported.
+- Reference-guided workflow is functional.
+- De novo workflow is functional.
+- Documentation is complete.
+- Validation results meet agreed performance benchmarks.
+- End-to-end analyses can be reproduced successfully.
+
+16. INTELLECTUAL PROPERTY
+
+Unless otherwise negotiated, all custom-developed source code, workflow definitions, documentation, configuration files, and associated deliverables shall become the property of the commissioning organization upon final acceptance.

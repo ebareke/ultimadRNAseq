@@ -1,0 +1,42 @@
+# Nextflow runtime
+.nextflow*
+work/
+results/
+.nextflow.log*
+report-*.html
+timeline-*.html
+trace-*.txt
+dag-*.html
+
+# Local config / secrets
+.env
+*.local.config
+conf/local.config
+
+# Test outputs
+tests/results/
+tests/work/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*~
+
+# Python (helper scripts in bin/)
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Large data — never commit
+*.pod5
+*.fast5
+*.bam
+*.bai
+*.cram
+*.fastq
+*.fastq.gz
+!tests/data/**/*.fastq.gz
+!tests/data/**/*.fast5

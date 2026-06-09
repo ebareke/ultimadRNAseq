@@ -1,0 +1,5 @@
+sample,condition,replicate,kit,fastq,pod5_dir,fast5_dir,control,organism
+WT_rep1,wildtype,1,RNA004,tests/data/wt_rep1.fastq.gz,,,true,human
+WT_rep2,wildtype,2,RNA004,tests/data/wt_rep2.fastq.gz,,,true,human
+KO_rep1,knockout,1,RNA004,tests/data/ko_rep1.fastq.gz,,,false,human
+KO_rep2,knockout,2,RNA004,tests/data/ko_rep2.fastq.gz,,,false,human

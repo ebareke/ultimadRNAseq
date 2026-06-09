@@ -1,0 +1,16 @@
+report_comment: >
+    This report aggregates QC, alignment, and quantification metrics for an
+    ONT direct RNA-seq run processed with the directRNA pipeline.
+
+report_section_order:
+    nanoplot:
+        order: -1000
+    samtools:
+        order: -1100
+    salmon:
+        order: -1200
+    software_versions:
+        order: -2000
+
+export_plots: true
+disable_version_detection: true
