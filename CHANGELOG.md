@@ -35,6 +35,39 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Full pipeline stub-runs green: INPUT_CHECK → QC → ALIGN → QUANTIFY → MULTIQC
   (21 tasks, 0 failures)
 
+### Added — Phase 6 (UI & reporting, stub-validated)
+- `SUMMARY_REPORT` module: Quarto (`assets/report/report.qmd`) → unified
+  **HTML + PDF** report aggregating QC, alignment, quant, modifications,
+  poly(A), de novo, software versions and run parameters (spec §8)
+- Wired into the main workflow (gated by `--skip_report`, default off); a
+  `run_summary.yml` of parameters/provenance is generated inline and passed in
+- Report inputs staged with `stageAs: "inputs/?/*"` to avoid per-sample
+  basename collisions
+- Streamlit **GUI scaffold** (`gui/app.py`, `requirements.txt`, `README.md`) —
+  standalone results browser over the `--outdir` (spec §7B), outside the DAG
+- Stub-runs green across profiles: `test`=22, `test_signal`=34, `test_denovo`=38
+
+### Packaging / known refinements (Phase 6)
+- `SUMMARY_REPORT` uses the Quarto container; PDF rendering needs a LaTeX/Typst
+  engine present (HTML always; PDF best-effort).
+
+### Added — Phase 5 (de novo transcript discovery, stub-validated)
+- `DENOVO` subworkflow (`subworkflows/local/denovo.nf`), mode='denovo'
+- Reference-free: `RATTLE` (cluster/correct/polish) → de novo transcripts
+- Genome-guided: `STRINGTIE2 -L` → novel-isoform GTF; `GFFREAD` extracts
+  transcript FASTA; `GFFCOMPARE` characterises vs the provided annotation
+- De novo abundance: `MINIMAP2_DENOVO` + `SALMON_DENOVO` align reads back to
+  each sample's own assembly (per-sample reference carried in the tuple)
+- `test_denovo` profile; stub-runs green (37 tasks)
+- Refactor: genome alignment now runs in BOTH modes whenever a reference FASTA
+  is supplied (StringTie2 and f5c need the genome BAM); Salmon stays
+  reference-mode-only, DENOVO is denovo-mode-only. No regression: `test`=21,
+  `test_signal`=33, DENOVO absent from both.
+
+### Packaging / known refinements (Phase 5)
+- `RATTLE` has no Bioconda recipe — container is a placeholder; build from the
+  comprehensivegenomics/RATTLE repo before real runs.
+
 ### Added — Phase 4 (poly(A)/poly(U) tail analysis, stub-validated)
 - `POLYA` subworkflow (`subworkflows/local/polya.nf`), gated by `--skip_polya`
 - `NANOPOLISH_POLYA`: `nanopolish index` + `polya` (alignment-anchored), joins

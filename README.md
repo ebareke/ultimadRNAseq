@@ -44,7 +44,8 @@ nextflow run ebareke/directRNA \
 | 2     | Basecalling + signal           | Dorado, f5c, Uncalled4                         |
 | 3     | RNA modifications              | m6anet, Nanocompore, nanoRMS, ELIGOS           |
 | 4     | Poly(A) analysis               | nanopolish polya, tailfindr                    |
-| 5     | De novo transcript discovery   | RATTLE, IsoQuant, StringTie2-LR (under review) |
+| 5     | De novo transcript discovery   | RATTLE, StringTie2-LR, gffcompare              |
+| 6     | Reporting + UI                 | MultiQC, Quarto (HTML+PDF), Streamlit GUI      |
 
 ## Repository layout
 

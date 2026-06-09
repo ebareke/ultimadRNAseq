@@ -11,17 +11,20 @@ include { SIGNAL         } from '../subworkflows/local/signal.nf'
 include { RESQUIGGLE     } from '../subworkflows/local/resquiggle.nf'
 include { MODIFICATIONS  } from '../subworkflows/local/modifications.nf'
 include { POLYA          } from '../subworkflows/local/polya.nf'
+include { DENOVO         } from '../subworkflows/local/denovo.nf'
 include { QC             } from '../subworkflows/local/qc.nf'
 include { PREPARE_GENOME } from '../subworkflows/local/prepare_genome.nf'
 include { ALIGN          } from '../subworkflows/local/align.nf'
 include { QUANTIFY       } from '../subworkflows/local/quantify.nf'
 include { MULTIQC        } from '../modules/local/multiqc.nf'
+include { SUMMARY_REPORT } from '../modules/local/summary_report.nf'
 
 workflow DRNASEQ {
 
     main:
     ch_versions   = Channel.empty()
     ch_multiqc_in = Channel.empty()
+    ch_report     = Channel.empty()   // cross-module files for the summary report
 
     // ------------------------------------------------------------------------
     // 1. Parse & validate sample sheet
@@ -63,14 +66,18 @@ workflow DRNASEQ {
     }
 
     // ------------------------------------------------------------------------
-    // 4. Alignment — Minimap2 (spec §5.4), reference mode only
+    // 4. Alignment — Minimap2 (spec §5.4).
+    //    Runs in BOTH modes whenever a reference is supplied: the genome BAM is
+    //    needed by f5c/modifications/poly(A) and by StringTie2 (de novo). The
+    //    transcriptome arm self-gates on --transcript_fasta (empty channel).
     // ------------------------------------------------------------------------
     ch_genome_bam = Channel.empty()
     ch_genome_bai = Channel.empty()
     ch_txome_bam  = Channel.empty()
     ch_txome_fa   = Channel.empty()
     ch_genome_fa  = Channel.empty()
-    if (params.mode == 'reference' && !params.skip_alignment) {
+    ch_gtf        = Channel.empty()
+    if (!params.skip_alignment && (params.fasta || params.transcript_fasta)) {
         PREPARE_GENOME ( params.fasta, params.gtf, params.transcript_fasta )
         ALIGN ( ch_fastq, PREPARE_GENOME.out.fasta, PREPARE_GENOME.out.txome )
 
@@ -79,6 +86,7 @@ workflow DRNASEQ {
         ch_txome_bam  = ALIGN.out.txome_bam
         ch_txome_fa   = PREPARE_GENOME.out.txome
         ch_genome_fa  = PREPARE_GENOME.out.fasta
+        ch_gtf        = PREPARE_GENOME.out.gtf
         ch_versions   = ch_versions.mix(ALIGN.out.versions)
         ch_multiqc_in = ch_multiqc_in.mix(ALIGN.out.multiqc_files)
     }
@@ -106,6 +114,11 @@ workflow DRNASEQ {
         MODIFICATIONS ( ch_eventalign, ch_genome_bam, ch_genome_bai, ch_genome_fa )
         ch_versions   = ch_versions.mix(MODIFICATIONS.out.versions)
         ch_multiqc_in = ch_multiqc_in.mix(MODIFICATIONS.out.multiqc_files)
+        ch_report     = ch_report.mix(
+            MODIFICATIONS.out.m6anet_sites.map { meta, f -> f },
+            MODIFICATIONS.out.nanocompore.map  { meta, f -> f },
+            MODIFICATIONS.out.nanorms.map      { meta, f -> f }
+        )
     }
 
     // ------------------------------------------------------------------------
@@ -115,6 +128,10 @@ workflow DRNASEQ {
     if (!params.skip_polya) {
         POLYA ( ch_fastq, SIGNAL.out.pod5, ch_genome_bam, ch_genome_bai, ch_genome_fa )
         ch_versions = ch_versions.mix(POLYA.out.versions)
+        ch_report   = ch_report.mix(
+            POLYA.out.nanopolish.map { meta, f -> f },
+            POLYA.out.tailfindr.map  { meta, f -> f }
+        )
     }
 
     // ------------------------------------------------------------------------
@@ -124,6 +141,21 @@ workflow DRNASEQ {
         QUANTIFY ( ch_txome_bam, ch_txome_fa )
         ch_versions   = ch_versions.mix(QUANTIFY.out.versions)
         ch_multiqc_in = ch_multiqc_in.mix(QUANTIFY.out.multiqc_files)
+    }
+
+    // ------------------------------------------------------------------------
+    // 5b. De novo transcript discovery (spec §5.7), denovo mode only.
+    //     RATTLE (reference-free) + StringTie2 (genome-guided, if reference) +
+    //     gffcompare characterisation + abundance against the de novo assembly.
+    // ------------------------------------------------------------------------
+    if (params.mode == 'denovo' && !params.skip_denovo) {
+        DENOVO ( ch_fastq, ch_genome_bam, ch_genome_bai, ch_genome_fa, ch_gtf )
+        ch_versions = ch_versions.mix(DENOVO.out.versions)
+        ch_report   = ch_report.mix(
+            DENOVO.out.rattle_transcripts.map { meta, f -> f },
+            DENOVO.out.stringtie_gtf.map      { meta, f -> f },
+            DENOVO.out.quant.map              { meta, f -> f }
+        )
     }
 
     // ------------------------------------------------------------------------
@@ -146,6 +178,33 @@ workflow DRNASEQ {
             .collect()
 
         MULTIQC ( ch_report_files, ch_multiqc_config.collect() )
+        ch_multiqc_in = ch_multiqc_in.mix(MULTIQC.out.report)
+    }
+
+    // ------------------------------------------------------------------------
+    // 7. Unified summary report — Quarto HTML + PDF (spec §8)
+    // ------------------------------------------------------------------------
+    if (!params.skip_report) {
+        // human-readable run summary (parameters & provenance) for the report
+        def summary_text = """\
+            pipeline: directRNA ${workflow.manifest.version}
+            run_name: ${workflow.runName}
+            mode: ${params.mode}
+            profile: ${workflow.profile}
+            input: ${params.input}
+            outdir: ${params.outdir}
+            run_dorado: ${params.run_dorado}
+            run_f5c: ${params.run_f5c}
+            skip_modifications: ${params.skip_modifications}
+            skip_polya: ${params.skip_polya}
+            skip_denovo: ${params.skip_denovo}
+            """.stripIndent()
+        ch_run_summary = Channel.of(summary_text).collectFile(name: 'run_summary.yml')
+
+        ch_report_in = ch_report.mix(ch_multiqc_in).collect().ifEmpty([])
+        ch_qmd       = Channel.fromPath("${projectDir}/assets/report/report.qmd", checkIfExists: true)
+
+        SUMMARY_REPORT ( ch_report_in, ch_qmd.collect(), ch_versions_file, ch_run_summary )
     }
 
     emit:
