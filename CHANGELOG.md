@@ -35,6 +35,30 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Full pipeline stub-runs green: INPUT_CHECK → QC → ALIGN → QUANTIFY → MULTIQC
   (21 tasks, 0 failures)
 
+### Added — Phase 3 (RNA modification detection, stub-validated)
+- `MODIFICATIONS` subworkflow (`subworkflows/local/modifications.nf`) covering
+  both detector families, gated by `--skip_modifications` (default true)
+- Single-sample: `M6ANET` (dataprep + inference) on f5c eventalign → per-site
+  (`data.site_proba.csv.gz`) and per-read m6A probabilities
+- Comparative (control-vs-test contrasts from the `control` flag, built by
+  channel `.filter` + `.combine`):
+  - `NANOCOMPORE_COLLAPSE` + `NANOCOMPORE_SAMPCOMP` (eventalign substrate)
+  - `ELIGOS_PAIRDIFF` — `eligos2 pair_diff_mod` from genome BAMs + reference
+    (whole-contig BED derived from FASTA via awk; basecalling-error signal)
+  - `NANORMS` — comparative stoichiometry from BAM pairs
+- Outputs under `results/modifications/{m6anet,nanocompore,eligos,nanorms}/`
+- `test_signal` sets `skip_modifications=false`; full path stub-runs green
+  (29 tasks). Phase 1 `test` profile unchanged (21).
+
+### Packaging / known refinements (Phase 3)
+- `ELIGOS_PAIRDIFF` uses `piroonj/eligos2` (no Bioconda); pin a digest.
+- `NANORMS` has **no** official image — container is a placeholder; a custom
+  image must be built from the nanoRMS repo before real runs.
+- m6anet/Nanocompore expect transcriptome-coordinate eventalign; current f5c
+  eventalign is genome-based. Refine before real-data runs.
+- Comparative pairing is a Cartesian product of test × control; revisit to
+  group replicates per condition for real studies.
+
 ### Added — Phase 2 (signal & basecalling, stub-validated)
 - `SIGNAL` subworkflow (`subworkflows/local/signal.nf`):
   - `POD5_CONVERT` — auto-converts FAST5→POD5 at ingest (unify on POD5)

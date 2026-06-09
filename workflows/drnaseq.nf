@@ -9,6 +9,7 @@
 include { INPUT_CHECK    } from '../subworkflows/local/input_check.nf'
 include { SIGNAL         } from '../subworkflows/local/signal.nf'
 include { RESQUIGGLE     } from '../subworkflows/local/resquiggle.nf'
+include { MODIFICATIONS  } from '../subworkflows/local/modifications.nf'
 include { QC             } from '../subworkflows/local/qc.nf'
 include { PREPARE_GENOME } from '../subworkflows/local/prepare_genome.nf'
 include { ALIGN          } from '../subworkflows/local/align.nf'
@@ -90,6 +91,20 @@ workflow DRNASEQ {
         RESQUIGGLE ( ch_fastq, SIGNAL.out.pod5, ch_genome_bam, ch_genome_bai, ch_genome_fa )
         ch_eventalign = RESQUIGGLE.out.eventalign
         ch_versions   = ch_versions.mix(RESQUIGGLE.out.versions)
+    }
+
+    // ------------------------------------------------------------------------
+    // 4c. RNA modification detection (spec §5.5), opt-in (!skip_modifications).
+    //     m6anet (single-sample m6A) consumes the f5c eventalign. Comparative
+    //     detectors (Nanocompore/nanoRMS/ELIGOS) land in Phase 3.2–3.4.
+    //     NOTE: m6anet/Nanocompore expect transcriptome-coordinate eventalign;
+    //     refine the eventalign reference vs the current genome-based one when
+    //     hardening against real data.
+    // ------------------------------------------------------------------------
+    if (!params.skip_modifications) {
+        MODIFICATIONS ( ch_eventalign, ch_genome_bam, ch_genome_bai, ch_genome_fa )
+        ch_versions   = ch_versions.mix(MODIFICATIONS.out.versions)
+        ch_multiqc_in = ch_multiqc_in.mix(MODIFICATIONS.out.multiqc_files)
     }
 
     // ------------------------------------------------------------------------
