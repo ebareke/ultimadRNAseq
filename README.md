@@ -64,4 +64,4 @@ directRNA/
 
 ## License
 
-TBD.
+MIT © 2026 Eric Bareke. See [LICENSE](LICENSE).

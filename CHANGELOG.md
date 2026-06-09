@@ -48,5 +48,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Phase 0 + Phase 1 verified green on Nextflow 26.04.3 / Temurin 17.
 - Verification is via `-stub-run` (no container engine on the dev box); real
   tool execution happens on HPC with Apptainer or `-profile docker`.
-- Open question: spec lists **"Nexxons"** as a quantifier — not a known ONT
-  tool. Implemented Salmon; likely they meant **NanoCount**. Needs clarification.
+- Resolved: spec's **"Nexxons"** quantifier → **NanoCount** (to be added as a
+  second quantifier alongside Salmon in a Phase 1.5 increment).
+- Sample sheet schema confirmed/locked.
+- Licensed **MIT**.

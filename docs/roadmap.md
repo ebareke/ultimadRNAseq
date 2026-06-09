@@ -19,9 +19,15 @@ Phased delivery plan for `directRNA`. Each phase is independently demoable.
 - **Conventions**: nf-core (forking/extending `nf-core/nanoseq` patterns)
 - **Primary deploy target**: HPC + SLURM + Apptainer; Docker secondary
 
+## Resolved decisions
+
+- **Sample sheet schema** — LOCKED (2026-06-09). Columns: sample, condition,
+  replicate, kit, fastq/pod5_dir/fast5_dir, control, organism, summary.
+- **"Nexxons"** (spec quantifier, not a real tool) — resolved to **NanoCount**.
+  To be added alongside Salmon as a second quantifier in a Phase 1.5 increment.
+
 ## Open design questions
 
-- Sample sheet schema — see `assets/schema_input.json` (in progress)
 - De novo assembler choice — RATTLE vs IsoQuant vs StringTie2-LR
 - Optional GUI stack — Streamlit vs Shiny vs no-GUI (MultiQC + nf-core launch only)
 - Reporting renderer for PDFs — Quarto vs ReportLab vs LaTeX
