@@ -35,6 +35,25 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Full pipeline stub-runs green: INPUT_CHECK → QC → ALIGN → QUANTIFY → MULTIQC
   (21 tasks, 0 failures)
 
+### Added — Phase 2 (signal & basecalling, stub-validated)
+- `SIGNAL` subworkflow (`subworkflows/local/signal.nf`):
+  - `POD5_CONVERT` — auto-converts FAST5→POD5 at ingest (unify on POD5)
+  - `DORADO_BASECALLER` — opt-in (`--run_dorado`), `process_gpu`, emits uBAM
+    with move tables; model via `--dorado_model`
+  - `DORADO_SUMMARY` — produces `sequencing_summary.txt` (activates pycoQC)
+  - `SAMTOOLS_FASTQ` — uBAM→FASTQ that feeds QC/ALIGN/QUANT
+- `RESQUIGGLE` subworkflow (`subworkflows/local/resquiggle.nf`):
+  - `F5C_EVENTALIGN` — opt-in (`--run_f5c`), `f5c index` + `f5c eventalign`
+    (`--rna`), joins reads+POD5+genome-BAM by sample; emits `eventalign.tsv.gz`
+    (substrate for Phases 3–4)
+- QC subworkflow refactored to take explicit `(fastq, summary)` channels so
+  basecalled reads/summaries integrate transparently
+- Reads feeding QC/align/quant = user FASTQ ∪ Dorado-basecalled FASTQ;
+  summaries = user-supplied ∪ Dorado-produced
+- `ALIGN` now also emits the genome BAI (needed by f5c)
+- Signal test fixtures (`tests/data/signal/`) + `test_signal` profile +
+  `samplesheet_signal_test.csv`; full signal path stub-runs green (22 tasks)
+
 ### Changed
 - `resourceLimits` is now a **closure** in `conf/base.config`. A map literal
   evaluates params eagerly at config-parse (before `-profile` merge) and would

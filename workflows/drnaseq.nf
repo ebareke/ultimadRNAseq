@@ -7,6 +7,8 @@
 */
 
 include { INPUT_CHECK    } from '../subworkflows/local/input_check.nf'
+include { SIGNAL         } from '../subworkflows/local/signal.nf'
+include { RESQUIGGLE     } from '../subworkflows/local/resquiggle.nf'
 include { QC             } from '../subworkflows/local/qc.nf'
 include { PREPARE_GENOME } from '../subworkflows/local/prepare_genome.nf'
 include { ALIGN          } from '../subworkflows/local/align.nf'
@@ -30,39 +32,68 @@ workflow DRNASEQ {
         "control=${meta.control}]  inputs: ${entry.keySet().join(', ')}"
     }
 
-    // FASTQ channel reused by QC and alignment
-    ch_fastq = ch_samples
+    // ------------------------------------------------------------------------
+    // 2. Signal processing & basecalling (spec §5.2)
+    //    FAST5→POD5 convert always; Dorado basecalling opt-in (--run_dorado).
+    // ------------------------------------------------------------------------
+    SIGNAL ( ch_samples )
+    ch_versions = ch_versions.mix(SIGNAL.out.versions)
+
+    // Reads feeding QC/align/quant = user-provided FASTQ ∪ Dorado-basecalled FASTQ
+    ch_provided_fastq = ch_samples
         .filter { meta, entry -> entry.containsKey('fastq') }
         .map    { meta, entry -> [ meta, entry.fastq ] }
+    ch_fastq = ch_provided_fastq.mix(SIGNAL.out.fastq)
+
+    // Sequencing summaries (pycoQC) = user-provided ∪ Dorado-produced
+    ch_provided_summary = ch_samples
+        .filter { meta, entry -> entry.containsKey('summary') }
+        .map    { meta, entry -> [ meta, entry.summary ] }
+    ch_summary = ch_provided_summary.mix(SIGNAL.out.summary)
 
     // ------------------------------------------------------------------------
-    // 2. Quality control (spec §5.3)
+    // 3. Quality control (spec §5.3)
     // ------------------------------------------------------------------------
     if (!params.skip_qc) {
-        QC ( ch_samples )
+        QC ( ch_fastq, ch_summary )
         ch_versions   = ch_versions.mix(QC.out.versions)
         ch_multiqc_in = ch_multiqc_in.mix(QC.out.multiqc_files)
     }
 
     // ------------------------------------------------------------------------
-    // 3. Alignment — Minimap2 (spec §5.4), reference mode only
+    // 4. Alignment — Minimap2 (spec §5.4), reference mode only
     // ------------------------------------------------------------------------
     ch_genome_bam = Channel.empty()
+    ch_genome_bai = Channel.empty()
     ch_txome_bam  = Channel.empty()
     ch_txome_fa   = Channel.empty()
+    ch_genome_fa  = Channel.empty()
     if (params.mode == 'reference' && !params.skip_alignment) {
         PREPARE_GENOME ( params.fasta, params.gtf, params.transcript_fasta )
         ALIGN ( ch_fastq, PREPARE_GENOME.out.fasta, PREPARE_GENOME.out.txome )
 
         ch_genome_bam = ALIGN.out.genome_bam
+        ch_genome_bai = ALIGN.out.genome_bai
         ch_txome_bam  = ALIGN.out.txome_bam
         ch_txome_fa   = PREPARE_GENOME.out.txome
+        ch_genome_fa  = PREPARE_GENOME.out.fasta
         ch_versions   = ch_versions.mix(ALIGN.out.versions)
         ch_multiqc_in = ch_multiqc_in.mix(ALIGN.out.multiqc_files)
     }
 
     // ------------------------------------------------------------------------
-    // 4. Quantification — Salmon (spec §5.4), reference mode only
+    // 4b. Resquiggle — f5c event alignment (spec §5.2), opt-in (--run_f5c).
+    //     Needs reads + POD5 signal + genome BAM; substrate for Phases 3–4.
+    // ------------------------------------------------------------------------
+    ch_eventalign = Channel.empty()
+    if (params.run_f5c) {
+        RESQUIGGLE ( ch_fastq, SIGNAL.out.pod5, ch_genome_bam, ch_genome_bai, ch_genome_fa )
+        ch_eventalign = RESQUIGGLE.out.eventalign
+        ch_versions   = ch_versions.mix(RESQUIGGLE.out.versions)
+    }
+
+    // ------------------------------------------------------------------------
+    // 5. Quantification — Salmon (spec §5.4), reference mode only
     // ------------------------------------------------------------------------
     if (params.mode == 'reference' && !params.skip_quantification) {
         QUANTIFY ( ch_txome_bam, ch_txome_fa )
@@ -71,7 +102,7 @@ workflow DRNASEQ {
     }
 
     // ------------------------------------------------------------------------
-    // 5. Aggregate report — MultiQC (spec §8) + provenance (spec §11)
+    // 6. Aggregate report — MultiQC (spec §8) + provenance (spec §11)
     // ------------------------------------------------------------------------
     // Collate all software versions into one provenance file...
     ch_versions_file = ch_versions

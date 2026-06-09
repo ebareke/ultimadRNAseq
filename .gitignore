@@ -40,3 +40,4 @@ venv/
 *.fastq.gz
 !tests/data/**/*.fastq.gz
 !tests/data/**/*.fast5
+!tests/data/**/*.pod5
