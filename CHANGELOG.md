@@ -35,6 +35,21 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Full pipeline stub-runs green: INPUT_CHECK → QC → ALIGN → QUANTIFY → MULTIQC
   (21 tasks, 0 failures)
 
+### Added — Phase 4 (poly(A)/poly(U) tail analysis, stub-validated)
+- `POLYA` subworkflow (`subworkflows/local/polya.nf`), gated by `--skip_polya`
+- `NANOPOLISH_POLYA`: `nanopolish index` + `polya` (alignment-anchored), joins
+  reads + signal + genome BAM + reference per sample → per-read `polya.tsv.gz`
+- `TAILFINDR`: alignment-free poly(A)+poly(U) from raw signal → per-read CSV
+- `test_signal` sets `skip_polya=false`; full path stub-runs green (33 tasks).
+  Phase 1 `test` profile unchanged (21).
+
+### Packaging / known refinements (Phase 4)
+- nanopolish & tailfindr were built for **FAST5/SLOW5**; the pipeline uses POD5.
+  Retain FAST5 or convert POD5→slow5 for real runs (f5c `poly-a` is the
+  POD5-native alternative to nanopolish).
+- `TAILFINDR` has no official image — container is a placeholder; build from the
+  adnaniazi/tailfindr R package before real runs.
+
 ### Added — Phase 3 (RNA modification detection, stub-validated)
 - `MODIFICATIONS` subworkflow (`subworkflows/local/modifications.nf`) covering
   both detector families, gated by `--skip_modifications` (default true)

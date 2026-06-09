@@ -8,7 +8,7 @@ Phased delivery plan for `directRNA`. Each phase is independently demoable.
 | **1** | MVP reference-guided: FASTQ → QC → Minimap2 → Salmon → HTML report       | 🟢 wired (stub-validated) |
 | **2** | Signal + basecalling: POD5/FAST5 ingest, Dorado, f5c (Uncalled4 later)   | 🟢 wired (stub-validated) |
 | **3** | RNA modifications: m6anet, Nanocompore, ELIGOS, nanoRMS                  | 🟢 wired (stub-validated) |
-| **4** | Poly(A) tail: nanopolish polya, tailfindr                                | ⚪ planned |
+| **4** | Poly(A) tail: nanopolish polya, tailfindr                                | 🟢 wired (stub-validated) |
 | **5** | De novo transcript discovery (tool choice TBD)                           | ⚪ planned |
 | **6** | UI + reporting polish: MultiQC integration, optional GUI, PDF reports    | ⚪ planned |
 | **7** | Validation: benchmark datasets, end-to-end tests, validation report      | ⚪ planned |

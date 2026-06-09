@@ -10,6 +10,7 @@ include { INPUT_CHECK    } from '../subworkflows/local/input_check.nf'
 include { SIGNAL         } from '../subworkflows/local/signal.nf'
 include { RESQUIGGLE     } from '../subworkflows/local/resquiggle.nf'
 include { MODIFICATIONS  } from '../subworkflows/local/modifications.nf'
+include { POLYA          } from '../subworkflows/local/polya.nf'
 include { QC             } from '../subworkflows/local/qc.nf'
 include { PREPARE_GENOME } from '../subworkflows/local/prepare_genome.nf'
 include { ALIGN          } from '../subworkflows/local/align.nf'
@@ -105,6 +106,15 @@ workflow DRNASEQ {
         MODIFICATIONS ( ch_eventalign, ch_genome_bam, ch_genome_bai, ch_genome_fa )
         ch_versions   = ch_versions.mix(MODIFICATIONS.out.versions)
         ch_multiqc_in = ch_multiqc_in.mix(MODIFICATIONS.out.multiqc_files)
+    }
+
+    // ------------------------------------------------------------------------
+    // 4d. Poly(A)/poly(U) tail analysis (spec §5.6), opt-in (!skip_polya).
+    //     nanopolish polya (alignment-anchored) + tailfindr (raw signal).
+    // ------------------------------------------------------------------------
+    if (!params.skip_polya) {
+        POLYA ( ch_fastq, SIGNAL.out.pod5, ch_genome_bam, ch_genome_bai, ch_genome_fa )
+        ch_versions = ch_versions.mix(POLYA.out.versions)
     }
 
     // ------------------------------------------------------------------------
