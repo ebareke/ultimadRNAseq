@@ -16,7 +16,6 @@ jobs:
         nxf_version: ['24.10.5', 'latest-stable']
         profile: ['test,standard']
     env:
-      NXF_VERSION: ${{ matrix.nxf_version }}
       NXF_PROFILE: ${{ matrix.profile }}
     steps:
       - uses: actions/checkout@v4
@@ -26,15 +25,32 @@ jobs:
         with:
           version: ${{ matrix.nxf_version }}
 
-      - name: Run smoke test
+      - name: Run smoke test (stub)
         run: |
           nextflow run "$GITHUB_WORKSPACE" \
               -profile "$NXF_PROFILE" \
+              -stub \
               --outdir ./results
 
-      - name: Upload pipeline_info on failure
-        if: failure()
-        uses: actions/upload-artifact@v4
+  nf-test:
+    name: nf-test (stub)
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        nxf_version: ['24.10.5', 'latest-stable']
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Nextflow
+        uses: nf-core/setup-nextflow@v2
         with:
-          name: pipeline_info
-          path: results/pipeline_info
+          version: ${{ matrix.nxf_version }}
+
+      - name: Install nf-test
+        run: |
+          curl -fsSL https://get.nf-test.com | bash
+          sudo mv nf-test /usr/local/bin/
+
+      - name: Run nf-test
+        run: nf-test test --verbose

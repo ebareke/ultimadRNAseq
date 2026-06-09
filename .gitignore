@@ -2,6 +2,10 @@
 .nextflow*
 work/
 results/
+
+# nf-test
+.nf-test/
+.nf-test.log
 .nextflow.log*
 report-*.html
 timeline-*.html

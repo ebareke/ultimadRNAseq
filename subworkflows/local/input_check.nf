@@ -65,15 +65,27 @@ def validate_row(Map row, Set seen_ids) {
         single_end: true   // dRNA-seq is single-molecule, always single-end
     ]
 
-    // --- resolve entry-point files (existence checked by downstream stageAs) ---
+    // --- resolve entry-point files ---
+    // Relative paths resolve against the launch dir first, then fall back to
+    // projectDir (so sample sheets shipped with the pipeline / test fixtures
+    // work regardless of where Nextflow is launched, e.g. under nf-test).
     def entry = [:]
-    if (fastq)     entry.fastq     = file(fastq,     checkIfExists: true)
-    if (pod5_dir)  entry.pod5_dir  = file(pod5_dir,  checkIfExists: true, type: 'dir')
-    if (fast5_dir) entry.fast5_dir = file(fast5_dir, checkIfExists: true, type: 'dir')
+    if (fastq)     entry.fastq     = resolve_input(fastq)
+    if (pod5_dir)  entry.pod5_dir  = resolve_input(pod5_dir)
+    if (fast5_dir) entry.fast5_dir = resolve_input(fast5_dir)
 
     // optional sequencing_summary.txt (enables pycoQC before Phase 2 basecalling)
     def summary = row.summary?.trim()
-    if (summary)   entry.summary   = file(summary,   checkIfExists: true)
+    if (summary)   entry.summary   = resolve_input(summary)
 
     return [ meta, entry ]
+}
+
+// Resolve a possibly-relative input path, falling back to projectDir.
+def resolve_input(String p) {
+    def f = file(p)
+    if (f.exists()) return f
+    def alt = file("${projectDir}/${p}")
+    if (alt.exists()) return alt
+    return file(p, checkIfExists: true)   // not found → throws a clear error
 }

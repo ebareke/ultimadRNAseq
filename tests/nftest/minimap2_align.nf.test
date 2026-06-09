@@ -1,0 +1,25 @@
+nextflow_process {
+
+    name "MINIMAP2_ALIGN module (stub)"
+    script "modules/local/minimap2_align.nf"
+    process "MINIMAP2_ALIGN"
+
+    test("emits sorted BAM, flagstat and versions") {
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] = [ [ id:'WT_rep1' ],
+                             file("\${projectDir}/tests/data/wt_rep1.fastq.gz") ]
+                input[1] = file("\${projectDir}/tests/data/reference/genome.fa")
+                """
+            }
+        }
+        then {
+            assert process.success
+            assert process.out.bam.size() == 1
+            assert process.out.flagstat.size() == 1
+            assert path(process.out.versions.get(0)).getText().contains("minimap2")
+        }
+    }
+}

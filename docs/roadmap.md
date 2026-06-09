@@ -11,13 +11,18 @@ Phased delivery plan for `directRNA`. Each phase is independently demoable.
 | **4** | Poly(A) tail: nanopolish polya, tailfindr                                | 🟢 wired (stub-validated) |
 | **5** | De novo: RATTLE + StringTie2 + gffcompare + de novo quant                | 🟢 wired (stub-validated) |
 | **6** | UI + reporting: Quarto HTML+PDF report + Streamlit GUI scaffold          | 🟢 wired (stub-validated) |
-| **7** | Validation: benchmark datasets, end-to-end tests, validation report      | ⚪ planned |
+| **7** | Validation: nf-test (unit + pipeline), benchmark pointers, CI, docs      | 🟢 done (5/5 tests pass) |
 
 ## Foundational decisions (locked)
 
 - **Orchestrator**: Nextflow (DSL2)
 - **Conventions**: nf-core (forking/extending `nf-core/nanoseq` patterns)
 - **Primary deploy target**: HPC + SLURM + Apptainer; Docker secondary
+
+> **All 8 phases (0–7) are wired and stub-validated.** The platform is
+> functionally complete against the SRS; remaining work is real-tool/real-data
+> hardening (container pins for placeholder tools, transcriptome-coordinate
+> eventalign, GPU runs) — tracked in the CHANGELOG "known refinements".
 
 ## Resolved decisions
 

@@ -1,0 +1,59 @@
+nextflow_pipeline {
+
+    name "directRNA pipeline — end-to-end (stub)"
+    script "main.nf"
+
+    test("reference-guided mode: QC + alignment + quant + report") {
+        options "-stub"
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+        }
+        then {
+            assert workflow.success
+            assert path("$outputDir/multiqc/multiqc_report.html").exists()
+            assert path("$outputDir/report/directRNA_report.html").exists()
+            assert path("$outputDir/pipeline_info/software_versions.yml").exists()
+        }
+    }
+
+    test("signal mode: Dorado + f5c + modifications + poly(A)") {
+        options "-stub"
+        when {
+            params {
+                outdir             = "$outputDir"
+                input              = "$projectDir/assets/samplesheet_signal_test.csv"
+                run_dorado         = true
+                run_f5c            = true
+                skip_modifications = false
+                skip_polya         = false
+            }
+        }
+        then {
+            assert workflow.success
+            assert path("$outputDir/signal/dorado").exists()
+            assert path("$outputDir/signal/f5c").exists()
+            assert path("$outputDir/modifications/m6anet").exists()
+            assert path("$outputDir/polya/nanopolish").exists()
+        }
+    }
+
+    test("de novo mode: RATTLE + StringTie2 + characterisation + quant") {
+        options "-stub"
+        when {
+            params {
+                outdir      = "$outputDir"
+                mode        = "denovo"
+                skip_denovo = false
+            }
+        }
+        then {
+            assert workflow.success
+            assert path("$outputDir/denovo/rattle").exists()
+            assert path("$outputDir/denovo/stringtie").exists()
+            assert path("$outputDir/denovo/gffcompare").exists()
+            assert path("$outputDir/denovo/quantification").exists()
+        }
+    }
+}

@@ -35,6 +35,20 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Full pipeline stub-runs green: INPUT_CHECK → QC → ALIGN → QUANTIFY → MULTIQC
   (21 tasks, 0 failures)
 
+### Added — Phase 7 (validation, spec §12)
+- **nf-test** harness: `nf-test.config`, `tests/nextflow.config`
+- Pipeline/integration tests (`tests/nftest/pipeline.nf.test`) covering all
+  three execution paths — reference, signal+modifications+poly(A), de novo —
+  asserting `workflow.success` and the expected output tree (stub mode)
+- Module unit tests (`nanoplot`, `minimap2_align`) asserting outputs + versions
+- All 5 tests pass on Nextflow 26.04.3 / Temurin 17
+- `INPUT_CHECK` now resolves relative sample-sheet paths against `projectDir`
+  as a fallback (robust under nf-test's isolated launch dir and for sheets
+  shipped with the pipeline)
+- CI extended with an `nf-test` job (stub) alongside the smoke test
+- `docs/validation.md`: strategy, how-to, benchmark dataset pointers (SG-NEx,
+  nf-core test-data, ONT Open Data, IVT controls)
+
 ### Added — Phase 6 (UI & reporting, stub-validated)
 - `SUMMARY_REPORT` module: Quarto (`assets/report/report.qmd`) → unified
   **HTML + PDF** report aggregating QC, alignment, quant, modifications,
