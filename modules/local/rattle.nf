@@ -2,7 +2,7 @@ process RATTLE {
     tag   "$meta.id"
     label 'process_high'
 
-    // RATTLE (comprehensivegenomics/RATTLE) — no Bioconda recipe. Container-only;
+    // RATTLE (comprna/RATTLE) — no Bioconda recipe. Container-only;
     // build with containers/rattle/Dockerfile (pin RATTLE_REF). See docs/containers.md.
     container 'docker.io/ebareke/rattle:1.0'
 

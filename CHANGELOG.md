@@ -124,7 +124,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Packaging / known refinements (Phase 5)
 - `RATTLE` has no Bioconda recipe — container is a placeholder; build from the
-  comprehensivegenomics/RATTLE repo before real runs.
+  comprna/RATTLE repo before real runs.
 
 ### Added — Phase 4 (poly(A)/poly(U) tail analysis, stub-validated)
 - `POLYA` subworkflow (`subworkflows/local/polya.nf`), gated by `--skip_polya`
