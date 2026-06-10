@@ -74,6 +74,7 @@ workflow DRNASEQ {
     ch_genome_bam = Channel.empty()
     ch_genome_bai = Channel.empty()
     ch_txome_bam  = Channel.empty()
+    ch_txome_bai  = Channel.empty()
     ch_txome_fa   = Channel.empty()
     ch_genome_fa  = Channel.empty()
     ch_gtf        = Channel.empty()
@@ -84,6 +85,7 @@ workflow DRNASEQ {
         ch_genome_bam = ALIGN.out.genome_bam
         ch_genome_bai = ALIGN.out.genome_bai
         ch_txome_bam  = ALIGN.out.txome_bam
+        ch_txome_bai  = ALIGN.out.txome_bai
         ch_txome_fa   = PREPARE_GENOME.out.txome
         ch_genome_fa  = PREPARE_GENOME.out.fasta
         ch_gtf        = PREPARE_GENOME.out.gtf
@@ -93,25 +95,25 @@ workflow DRNASEQ {
 
     // ------------------------------------------------------------------------
     // 4b. Resquiggle — f5c event alignment (spec §5.2), opt-in (--run_f5c).
-    //     Needs reads + POD5 signal + genome BAM; substrate for Phases 3–4.
+    //     Produces transcriptome- AND genome-coordinate eventalign; the
+    //     transcriptome one is the correct substrate for m6anet / Nanocompore.
     // ------------------------------------------------------------------------
-    ch_eventalign = Channel.empty()
+    ch_eventalign_txome = Channel.empty()
     if (params.run_f5c) {
-        RESQUIGGLE ( ch_fastq, SIGNAL.out.pod5, ch_genome_bam, ch_genome_bai, ch_genome_fa )
-        ch_eventalign = RESQUIGGLE.out.eventalign
-        ch_versions   = ch_versions.mix(RESQUIGGLE.out.versions)
+        RESQUIGGLE ( ch_fastq, SIGNAL.out.pod5,
+                     ch_genome_bam, ch_genome_bai, ch_genome_fa,
+                     ch_txome_bam,  ch_txome_bai,  ch_txome_fa )
+        ch_eventalign_txome = RESQUIGGLE.out.eventalign_txome
+        ch_versions         = ch_versions.mix(RESQUIGGLE.out.versions)
     }
 
     // ------------------------------------------------------------------------
     // 4c. RNA modification detection (spec §5.5), opt-in (!skip_modifications).
-    //     m6anet (single-sample m6A) consumes the f5c eventalign. Comparative
-    //     detectors (Nanocompore/nanoRMS/ELIGOS) land in Phase 3.2–3.4.
-    //     NOTE: m6anet/Nanocompore expect transcriptome-coordinate eventalign;
-    //     refine the eventalign reference vs the current genome-based one when
-    //     hardening against real data.
+    //     m6anet + Nanocompore consume the TRANSCRIPTOME-coordinate eventalign;
+    //     ELIGOS/nanoRMS use the genome BAM (error-based / per-read).
     // ------------------------------------------------------------------------
     if (!params.skip_modifications) {
-        MODIFICATIONS ( ch_eventalign, ch_genome_bam, ch_genome_bai, ch_genome_fa )
+        MODIFICATIONS ( ch_eventalign_txome, ch_genome_bam, ch_genome_bai, ch_genome_fa )
         ch_versions   = ch_versions.mix(MODIFICATIONS.out.versions)
         ch_multiqc_in = ch_multiqc_in.mix(MODIFICATIONS.out.multiqc_files)
         ch_report     = ch_report.mix(

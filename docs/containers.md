@@ -20,7 +20,31 @@ resolve.
 ELIGOS uses the author's image `piroonj/eligos2:v2.1.0` (no Bioconda); pin it to
 an immutable digest on your system.
 
-## Build & push
+## Build & push — automated (recommended, no local Docker needed)
+
+A GitHub Actions workflow builds and pushes all three images. Add two
+repository secrets (Settings ▸ Secrets and variables ▸ Actions):
+
+| Secret | Value |
+|--------|-------|
+| `DOCKERHUB_USERNAME` | your Docker Hub user (e.g. `ebareke`) |
+| `DOCKERHUB_TOKEN` | a Docker Hub access token — **never commit it** |
+
+Then run **Actions ▸ Build & push containers ▸ Run workflow**, or push any
+change under `containers/`. See `.github/workflows/containers.yml`.
+
+## Build & push — local script
+
+`containers/build_and_push.sh` reads credentials from the environment (the token
+is never stored in the repo):
+
+```bash
+export DOCKERHUB_USERNAME=ebareke
+export DOCKERHUB_TOKEN=<your-token>          # export, do not paste into files
+./containers/build_and_push.sh               # all three; PUSH=false to build only
+```
+
+## Build & push — manual
 
 Pin each upstream `*_REF` build-arg to a commit SHA / release tag for
 reproducibility, then build and push (replace `ebareke` with your registry):

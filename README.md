@@ -2,8 +2,25 @@
 
 Reproducible analysis platform for Oxford Nanopore **Direct RNA Sequencing (dRNA-seq)** data.
 
-> **Status:** Phase 0 (scaffolding). Not yet runnable end-to-end.
-> See [docs/roadmap.md](docs/roadmap.md) for the phased delivery plan.
+> **Status:** all modules wired and stub/nf-test validated across reference,
+> signal, and de novo paths. Real-tool/real-data hardening is ongoing (see
+> [CHANGELOG](CHANGELOG.md) and [docs/roadmap.md](docs/roadmap.md)).
+
+## Documentation
+
+| Guide | |
+|-------|--|
+| [Usage](docs/usage.md) | sample sheet, modes, toggles, profiles, outputs |
+| [Environment](docs/environment.md) | Java/Nextflow bootstrap |
+| [Containers](docs/containers.md) | build/push the custom images |
+| [SG-NEx run](docs/sgnex_run.md) | first real-data run (FASTQ) |
+| [Signal + GPU run](docs/signal_gpu_run.md) | POD5/FAST5 → modifications/poly(A) |
+| [Validation](docs/validation.md) | nf-test, benchmarks |
+| [Development](docs/development.md) | architecture, extending |
+| [Roadmap](docs/roadmap.md) | phase status |
+
+A full **[GitHub wiki](../../wiki)** mirrors these (Home, Installation, Usage,
+Workflow-Modes, Modules-and-Tools, Real-Data-Runs, Containers, Development, FAQ).
 
 ## What it does
 

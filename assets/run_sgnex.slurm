@@ -4,9 +4,7 @@
 #SBATCH --cpus-per-task=2
 #SBATCH --mem=8G
 #SBATCH --time=48:00:00
-## --- EDIT these for your cluster ---
 #SBATCH --account=CHANGE_ME
-#SBATCH --partition=CHANGE_ME
 ## -----------------------------------
 #
 # Nextflow "head" job: it stays alive for the whole run and submits each

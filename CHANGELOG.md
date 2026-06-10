@@ -5,6 +5,28 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added — real-tool hardening & documentation
+- **Transcriptome-coordinate eventalign**: f5c now event-aligns against the
+  transcriptome AND the genome (`RESQUIGGLE` runs `F5C_EVENTALIGN_TXOME` +
+  `F5C_EVENTALIGN_GENOME`); m6anet/Nanocompore now consume the transcriptome
+  eventalign (transcript-coordinate calls). `ALIGN` emits `txome_bai`.
+- **Container build/push automation**: `.github/workflows/containers.yml`
+  (Docker Hub via `DOCKERHUB_USERNAME`/`DOCKERHUB_TOKEN` secrets) +
+  `containers/build_and_push.sh` (token via env — never committed).
+- **Signal + GPU run**: `signal` profile (`conf/signal.config`) enabling
+  Dorado/f5c/modifications/poly(A) with a GPU resource request + Apptainer
+  `--nv`; `assets/run_signal_gpu.slurm`, `assets/samplesheet_signal.csv`,
+  `docs/signal_gpu_run.md`.
+- **Documentation**: `docs/usage.md` (user guide), `docs/development.md`
+  (developer guide), and a full GitHub `wiki/` (Home, Installation, Usage,
+  Workflow-Modes, Modules-and-Tools, Real-Data-Runs, Containers, Development,
+  FAQ, _Sidebar).
+
+### Note
+- Custom images (RATTLE/tailfindr/nanoRMS) still need to be **built & pushed**
+  to a registry the cluster can reach (run the CI workflow or the script) — no
+  container engine is available in the dev sandbox.
+
 ### Added — first real-data run (SG-NEx)
 - `sgnex` profile (`conf/sgnex.config`): SG-NEx public direct-RNA benchmark,
   FASTQ entry, reference-guided; GENCODE v44 human references via URL;

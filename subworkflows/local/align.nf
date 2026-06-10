@@ -44,6 +44,7 @@ workflow ALIGN {
     genome_bam    = MINIMAP2_GENOME.out.bam
     genome_bai    = MINIMAP2_GENOME.out.bai
     txome_bam     = MINIMAP2_TXOME.out.bam
+    txome_bai     = MINIMAP2_TXOME.out.bai
     multiqc_files = ch_multiqc_in
     versions      = ch_versions
 }
