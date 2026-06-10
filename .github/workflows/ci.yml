@@ -14,7 +14,10 @@ jobs:
       fail-fast: false
       matrix:
         nxf_version: ['24.10.5', 'latest-stable']
-        profile: ['test,standard']
+        # 'test' only (no engine): -stub still provisions conda/containers, so a
+        # conda profile would need mamba on the runner. No engine = inert
+        # directives, stub runs in plain bash.
+        profile: ['test']
     env:
       NXF_PROFILE: ${{ matrix.profile }}
     steps:

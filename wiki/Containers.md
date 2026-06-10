@@ -1,9 +1,9 @@
 # Containers
 
 Most tools use **biocontainers** referenced directly in each module — nothing to
-do. Three tools have no Bioconda recipe and ship as buildable images under
-`containers/`: **RATTLE**, **tailfindr**, **nanoRMS**. ELIGOS uses the author's
-image `piroonj/eligos2`.
+do (including **RATTLE**, which is on Bioconda). Two tools have no Bioconda
+recipe and ship as buildable images under `containers/`: **tailfindr** and
+**nanoRMS**. ELIGOS uses the author's image `piroonj/eligos2`.
 
 ## Build & push (automated — recommended)
 
@@ -27,7 +27,7 @@ export DOCKERHUB_TOKEN=<your-token>      # export; never paste into a file
 ```
 
 Pin upstream refs for reproducibility:
-`RATTLE_REF=<sha> TAILFINDR_REF=<tag> NANORMS_REF=<sha> ./containers/build_and_push.sh`
+`TAILFINDR_REF=<tag> NANORMS_REF=<sha> ./containers/build_and_push.sh`
 
 ## Apptainer (HPC)
 
@@ -35,12 +35,12 @@ Nextflow pulls these Docker images automatically under `-profile apptainer`.
 Pre-build SIFs if you prefer:
 
 ```bash
-apptainer build rattle_1.0.sif docker://ebareke/rattle:1.0
+apptainer build tailfindr_1.4.sif docker://ebareke/tailfindr:1.4
 ```
 
 ## Production pinning
 
 Once pushed, replace the tag with an immutable digest in the module:
-`container 'docker.io/ebareke/rattle@sha256:<digest>'`.
+`container 'docker.io/ebareke/tailfindr@sha256:<digest>'`.
 
 Full detail: `docs/containers.md`.

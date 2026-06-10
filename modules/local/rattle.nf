@@ -2,9 +2,10 @@ process RATTLE {
     tag   "$meta.id"
     label 'process_high'
 
-    // RATTLE (comprna/RATTLE) — no Bioconda recipe. Container-only;
-    // build with containers/rattle/Dockerfile (pin RATTLE_REF). See docs/containers.md.
-    container 'docker.io/ebareke/rattle:1.0'
+    conda "bioconda::rattle=1.0"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/rattle:1.0--h5ca1c30_0' :
+        'biocontainers/rattle:1.0--h5ca1c30_0' }"
 
     input:
     tuple val(meta), path(fastq)

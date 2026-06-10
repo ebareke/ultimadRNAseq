@@ -13,10 +13,11 @@ resolve.
 
 | Tool | Module | Dockerfile | Module tag |
 |------|--------|-----------|------------|
-| RATTLE (de novo) | `modules/local/rattle.nf` | `containers/rattle/` | `ebareke/rattle:1.0` |
 | tailfindr (poly-A) | `modules/local/tailfindr.nf` | `containers/tailfindr/` | `ebareke/tailfindr:1.4` |
 | nanoRMS (modifications) | `modules/local/nanorms.nf` | `containers/nanorms/` | `ebareke/nanorms:2.0` |
 
+RATTLE **is** on Bioconda — it uses the standard biocontainer
+(`biocontainers/rattle:1.0--h5ca1c30_0`), no custom build needed.
 ELIGOS uses the author's image `piroonj/eligos2:v2.1.0` (no Bioconda); pin it to
 an immutable digest on your system.
 
@@ -50,10 +51,8 @@ Pin each upstream `*_REF` build-arg to a commit SHA / release tag for
 reproducibility, then build and push (replace `ebareke` with your registry):
 
 ```bash
-docker build -t ebareke/rattle:1.0    --build-arg RATTLE_REF=<sha>    containers/rattle
 docker build -t ebareke/tailfindr:1.4 --build-arg TAILFINDR_REF=<tag> containers/tailfindr
 docker build -t ebareke/nanorms:2.0   --build-arg NANORMS_REF=<sha>   containers/nanorms
-docker push ebareke/rattle:1.0
 docker push ebareke/tailfindr:1.4
 docker push ebareke/nanorms:2.0
 ```
@@ -64,7 +63,6 @@ Nextflow pulls these Docker images automatically under `-profile apptainer`/
 `singularity`. To pre-build SIF files:
 
 ```bash
-apptainer build rattle_1.0.sif    docker://ebareke/rattle:1.0
 apptainer build tailfindr_1.4.sif docker://ebareke/tailfindr:1.4
 apptainer build nanorms_2.0.sif   docker://ebareke/nanorms:2.0
 ```
@@ -74,7 +72,7 @@ apptainer build nanorms_2.0.sif   docker://ebareke/nanorms:2.0
 Once pushed, replace the tag with the immutable digest in the module, e.g.:
 
 ```groovy
-container 'docker.io/ebareke/rattle@sha256:<digest>'
+container 'docker.io/ebareke/tailfindr@sha256:<digest>'
 ```
 
 ## Notes

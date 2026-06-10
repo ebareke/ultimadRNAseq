@@ -18,7 +18,7 @@
 | Stoichiometry | nanoRMS | `nanorms.nf` | custom (`containers/nanorms`) |
 | Poly(A) | nanopolish polya | `nanopolish_polya.nf` | biocontainers |
 | Poly(A)/(U) | tailfindr | `tailfindr.nf` | custom (`containers/tailfindr`) |
-| De novo | RATTLE | `rattle.nf` | custom (`containers/rattle`) |
+| De novo | RATTLE | `rattle.nf` | biocontainers |
 | De novo | StringTie2 | `stringtie2.nf` | biocontainers |
 | De novo | gffread / gffcompare | `gffread.nf`, `gffcompare.nf` | biocontainers |
 | Report | MultiQC | `multiqc.nf` | biocontainers |

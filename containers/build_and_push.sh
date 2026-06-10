@@ -14,19 +14,19 @@
 #   ./containers/build_and_push.sh rattle           # one image
 #
 # Optionally pin upstream refs for reproducibility:
-#   RATTLE_REF=<sha> TAILFINDR_REF=<tag> NANORMS_REF=<sha> ./containers/build_and_push.sh
+#   TAILFINDR_REF=<tag> NANORMS_REF=<sha> ./containers/build_and_push.sh
 set -euo pipefail
 
 USER_NS="${DOCKERHUB_USERNAME:-ebareke}"
 PUSH="${PUSH:-true}"
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# image -> tag and build-arg name
-declare -A TAG=( [rattle]=1.0 [tailfindr]=1.4 [nanorms]=2.0 )
-declare -A ARG=( [rattle]=RATTLE_REF [tailfindr]=TAILFINDR_REF [nanorms]=NANORMS_REF )
+# image -> tag and build-arg name  (RATTLE uses the Bioconda biocontainer; not built here)
+declare -A TAG=( [tailfindr]=1.4 [nanorms]=2.0 )
+declare -A ARG=( [tailfindr]=TAILFINDR_REF [nanorms]=NANORMS_REF )
 
 targets=("${@:-}")
-[ -z "${targets[*]}" ] && targets=(rattle tailfindr nanorms)
+[ -z "${targets[*]}" ] && targets=(tailfindr nanorms)
 
 if [ "$PUSH" = "true" ]; then
     : "${DOCKERHUB_TOKEN:?Set DOCKERHUB_TOKEN in the environment (do not hardcode)}"
