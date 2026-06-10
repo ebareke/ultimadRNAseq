@@ -3,7 +3,7 @@ process POD5_CONVERT {
     label 'process_medium'
 
     conda "bioconda::pod5=0.3.10"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+    container "${ (workflow.containerEngine == 'singularity' || workflow.containerEngine == 'apptainer') && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/pod5:0.3.10--pyhdfd78af_0' :
         'biocontainers/pod5:0.3.10--pyhdfd78af_0' }"
 

@@ -4,7 +4,7 @@ process F5C_EVENTALIGN {
     label 'process_gpu'   // f5c uses GPU when available; falls back to CPU
 
     conda "bioconda::f5c=1.5"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+    container "${ (workflow.containerEngine == 'singularity' || workflow.containerEngine == 'apptainer') && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/f5c:1.5--hd43b18c_0' :
         'biocontainers/f5c:1.5--hd43b18c_0' }"
 

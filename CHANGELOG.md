@@ -5,6 +5,19 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added — Apptainer & HPC
+- All 21 tool modules now select the Galaxy-depot **Singularity/Apptainer**
+  image under `-profile apptainer`/`hpc` (engine `apptainer` is recognised, not
+  just `singularity`) — no Docker→SIF conversion at run time for Bioconda tools.
+- `RATTLE` switched to its **Bioconda biocontainer** (`rattle:1.0--h5ca1c30_0`);
+  custom build removed.
+- `.github/workflows/apptainer.yml`: builds SIFs for the non-Bioconda tools
+  (tailfindr, nanoRMS, ELIGOS) **on GitHub**, smoke-tests each under Apptainer,
+  publishes to **GHCR** (oras://), and verifies the Bioconda Apptainer path
+  (pull+exec a Galaxy-depot image).
+- `docs/hpc.md`: HPC/Apptainer guide (image resolution, GHCR pre-seeding,
+  scratch/cache settings, GPU).
+
 ### Added — real-tool hardening & documentation
 - **Transcriptome-coordinate eventalign**: f5c now event-aligns against the
   transcriptome AND the genome (`RESQUIGGLE` runs `F5C_EVENTALIGN_TXOME` +

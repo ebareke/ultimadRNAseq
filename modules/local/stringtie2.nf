@@ -3,7 +3,7 @@ process STRINGTIE2 {
     label 'process_medium'
 
     conda "bioconda::stringtie=2.2.3"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+    container "${ (workflow.containerEngine == 'singularity' || workflow.containerEngine == 'apptainer') && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/stringtie:2.2.3--h43eeafb_0' :
         'biocontainers/stringtie:2.2.3--h43eeafb_0' }"
 

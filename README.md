@@ -13,6 +13,7 @@ Reproducible analysis platform for Oxford Nanopore **Direct RNA Sequencing (dRNA
 | [Usage](docs/usage.md) | sample sheet, modes, toggles, profiles, outputs |
 | [Environment](docs/environment.md) | Java/Nextflow bootstrap |
 | [Containers](docs/containers.md) | build/push the custom images |
+| [HPC & Apptainer](docs/hpc.md) | SLURM + Apptainer, GHCR SIFs, GPU |
 | [SG-NEx run](docs/sgnex_run.md) | first real-data run (FASTQ) |
 | [Signal + GPU run](docs/signal_gpu_run.md) | POD5/FAST5 → modifications/poly(A) |
 | [Validation](docs/validation.md) | nf-test, benchmarks |

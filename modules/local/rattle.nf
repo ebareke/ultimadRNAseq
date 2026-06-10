@@ -3,7 +3,7 @@ process RATTLE {
     label 'process_high'
 
     conda "bioconda::rattle=1.0"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+    container "${ (workflow.containerEngine == 'singularity' || workflow.containerEngine == 'apptainer') && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/rattle:1.0--h5ca1c30_0' :
         'biocontainers/rattle:1.0--h5ca1c30_0' }"
 

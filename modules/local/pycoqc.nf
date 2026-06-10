@@ -3,7 +3,7 @@ process PYCOQC {
     label 'process_low'
 
     conda "bioconda::pycoqc=2.5.2"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+    container "${ (workflow.containerEngine == 'singularity' || workflow.containerEngine == 'apptainer') && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/pycoqc:2.5.2--py_0' :
         'biocontainers/pycoqc:2.5.2--py_0' }"
 

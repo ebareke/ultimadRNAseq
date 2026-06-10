@@ -3,7 +3,7 @@ process NANOPOLISH_POLYA {
     label 'process_high'
 
     conda "bioconda::nanopolish=0.14.0"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+    container "${ (workflow.containerEngine == 'singularity' || workflow.containerEngine == 'apptainer') && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/nanopolish:0.14.0--ha9c7c1a_3' :
         'biocontainers/nanopolish:0.14.0--ha9c7c1a_3' }"
 

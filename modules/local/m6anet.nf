@@ -3,7 +3,7 @@ process M6ANET {
     label 'process_medium'
 
     conda "bioconda::m6anet=2.1.0"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+    container "${ (workflow.containerEngine == 'singularity' || workflow.containerEngine == 'apptainer') && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/m6anet:2.1.0--pyhdfd78af_0' :
         'biocontainers/m6anet:2.1.0--pyhdfd78af_0' }"
 

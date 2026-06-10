@@ -3,7 +3,7 @@ process GFFCOMPARE {
     label 'process_low'
 
     conda "bioconda::gffcompare=0.12.6"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+    container "${ (workflow.containerEngine == 'singularity' || workflow.containerEngine == 'apptainer') && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/gffcompare:0.12.6--h9f5acd7_0' :
         'biocontainers/gffcompare:0.12.6--h9f5acd7_0' }"
 

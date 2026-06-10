@@ -3,7 +3,7 @@ process SAMTOOLS_FASTQ {
     label 'process_low'
 
     conda "bioconda::samtools=1.20"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+    container "${ (workflow.containerEngine == 'singularity' || workflow.containerEngine == 'apptainer') && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/samtools:1.20--h50ea8bc_0' :
         'biocontainers/samtools:1.20--h50ea8bc_0' }"
 

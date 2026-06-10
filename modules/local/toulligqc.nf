@@ -3,7 +3,7 @@ process TOULLIGQC {
     label 'process_low'
 
     conda "bioconda::toulligqc=2.5.6"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+    container "${ (workflow.containerEngine == 'singularity' || workflow.containerEngine == 'apptainer') && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/toulligqc:2.5.6--pyhdfd78af_0' :
         'biocontainers/toulligqc:2.5.6--pyhdfd78af_0' }"
 

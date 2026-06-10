@@ -3,7 +3,7 @@ process SALMON_QUANT {
     label 'process_medium'
 
     conda "bioconda::salmon=1.10.3"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+    container "${ (workflow.containerEngine == 'singularity' || workflow.containerEngine == 'apptainer') && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/salmon:1.10.3--haf24da9_3' :
         'biocontainers/salmon:1.10.3--haf24da9_3' }"
 

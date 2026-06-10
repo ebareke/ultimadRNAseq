@@ -5,7 +5,7 @@ process DORADO_BASECALLER {
     // Dorado is distributed by ONT. Pin a concrete tag on your target system;
     // the container below is a placeholder for the ONT-published image.
     conda "bioconda::dorado=0.8.3"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+    container "${ (workflow.containerEngine == 'singularity' || workflow.containerEngine == 'apptainer') && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/dorado:0.8.3--h9ee0642_0' :
         'ontresearch/dorado:sha268dcb4cd02093e75cdc58821f8b93719c4255ed' }"
 
