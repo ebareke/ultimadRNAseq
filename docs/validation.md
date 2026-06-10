@@ -41,13 +41,14 @@ Requires Nextflow ≥24.04 and Java 17 (see [environment.md](environment.md)).
 
 | Test | Result |
 |------|--------|
-| `pipeline.nf.test` — reference-guided mode | ✅ pass |
+| `pipeline.nf.test` — reference-guided mode (incl. NanoCount) | ✅ pass |
 | `pipeline.nf.test` — signal + modifications + poly(A) | ✅ pass |
 | `pipeline.nf.test` — de novo mode | ✅ pass |
 | `nanoplot.nf.test` | ✅ pass |
 | `minimap2_align.nf.test` | ✅ pass |
+| `nanocount.nf.test` | ✅ pass |
 
-All stub-level tests pass on Nextflow 26.04.3 / Temurin 17.
+All 6 stub-level tests pass on Nextflow 26.04.3 / Temurin 17.
 
 ## Benchmark datasets (for real-tool end-to-end validation)
 
