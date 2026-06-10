@@ -81,8 +81,11 @@ def validate_row(Map row, Set seen_ids) {
     return [ meta, entry ]
 }
 
-// Resolve a possibly-relative input path, falling back to projectDir.
+// Resolve an input path. Remote URLs (http/https/s3/...) are passed straight to
+// Nextflow's staging; local relative paths resolve against the launch dir first,
+// then projectDir (so pipeline-shipped sheets / nf-test isolated dirs work).
 def resolve_input(String p) {
+    if (p ==~ /(?i)^[a-z][a-z0-9+.-]*:\/\/.*/) return file(p, checkIfExists: true)  // URL/remote
     def f = file(p)
     if (f.exists()) return f
     def alt = file("${projectDir}/${p}")

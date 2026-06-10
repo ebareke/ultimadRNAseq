@@ -5,6 +5,17 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added — first real-data run (SG-NEx)
+- `sgnex` profile (`conf/sgnex.config`): SG-NEx public direct-RNA benchmark,
+  FASTQ entry, reference-guided; GENCODE v44 human references via URL;
+  signal stages off
+- `assets/samplesheet_sgnex.csv` (SG-NEx FASTQ URLs — verify keys per runbook)
+- `assets/run_sgnex.slurm` SLURM head-job submission script
+- `docs/sgnex_run.md` runbook (prereqs, sample-key verification, launch,
+  outputs, correctness checks)
+- `INPUT_CHECK.resolve_input` is now URL-aware — remote sample-sheet paths
+  (http/https/s3/…) bypass local-path resolution and stage directly
+
 ### Changed — container hardening
 - Replaced placeholder/`:latest` container tags with pinned, buildable images:
   - RATTLE → `ebareke/rattle:1.0` (`containers/rattle/Dockerfile`)

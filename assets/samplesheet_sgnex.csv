@@ -1,0 +1,3 @@
+sample,condition,replicate,kit,fastq,pod5_dir,fast5_dir,control,organism
+SGNex_A549_directRNA_rep1,A549,1,RNA002,https://sg-nex-data.s3.amazonaws.com/data/sequencing_data_ont/fastq/SGNex_A549_directRNA_replicate5_run1/SGNex_A549_directRNA_replicate5_run1.fastq.gz,,,false,human
+SGNex_Hct116_directRNA_rep1,Hct116,1,RNA002,https://sg-nex-data.s3.amazonaws.com/data/sequencing_data_ont/fastq/SGNex_Hct116_directRNA_replicate3_run1/SGNex_Hct116_directRNA_replicate3_run1.fastq.gz,,,false,human
