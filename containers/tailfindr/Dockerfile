@@ -9,21 +9,35 @@ FROM rocker/r-ver:4.3.2
 
 ARG TAILFINDR_REF=master
 
-# system libs for hdf5r, Rsamtools, rbokeh, curl/xml, fonts/images
+# System libs:
+#   libhdf5-dev + patch        -> hdf5r (CRAN) builds
+#   libbz2-dev liblzma-dev     -> Rhtslib/Rsamtools (htslib) builds
+#   libpng/jpeg/fontconfig     -> rbokeh / graphics
+#   libxml2/curl/ssl/zlib      -> general
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        libhdf5-dev libxml2-dev libcurl4-openssl-dev libssl-dev \
-        libfontconfig1-dev libpng-dev libjpeg-dev zlib1g-dev git \
+        libhdf5-dev patch \
+        libbz2-dev liblzma-dev \
+        libxml2-dev libcurl4-openssl-dev libssl-dev zlib1g-dev \
+        libfontconfig1-dev libpng-dev libjpeg-dev \
+        git \
     && rm -rf /var/lib/apt/lists/*
 
 RUN R -e "install.packages(c('remotes','BiocManager'), repos='https://cloud.r-project.org')"
 
-# Bioconductor dependencies (not on CRAN)
-RUN R -e "BiocManager::install(c('Biostrings','Rsamtools','rhdf5'), ask=FALSE, update=FALSE)"
+# hdf5r is a CRAN package (NOT rhdf5); needs libhdf5-dev + patch. Fail fast.
+RUN R -e "install.packages('hdf5r', repos='https://cloud.r-project.org'); \
+          if (!requireNamespace('hdf5r', quietly=TRUE)) quit(status=1)"
 
-# rbokeh was ARCHIVED from CRAN — install it from GitHub so tailfindr can load
-RUN R -e "remotes::install_github('bokeh/rbokeh', upgrade='never')"
+# Bioconductor deps (Rsamtools pulls Rhtslib → htslib). Fail fast.
+RUN R -e "BiocManager::install(c('Biostrings','Rsamtools'), ask=FALSE, update=FALSE); \
+          ok <- all(c('Biostrings','Rsamtools') %in% rownames(installed.packages())); \
+          if (!ok) quit(status=1)"
 
-# tailfindr + its remaining CRAN dependencies
+# rbokeh was ARCHIVED from CRAN — install from GitHub so tailfindr can load
+RUN R -e "remotes::install_github('bokeh/rbokeh', upgrade='never'); \
+          if (!requireNamespace('rbokeh', quietly=TRUE)) quit(status=1)"
+
+# tailfindr + remaining CRAN dependencies
 RUN R -e "remotes::install_github('adnaniazi/tailfindr@${TAILFINDR_REF}', upgrade='never', dependencies=TRUE)"
 
 # smoke test — must load cleanly
