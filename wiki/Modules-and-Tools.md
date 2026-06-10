@@ -12,6 +12,7 @@
 | QC | pycoQC | `pycoqc.nf` | biocontainers |
 | Alignment | Minimap2 (+samtools) | `minimap2_align.nf` | mulled biocontainer |
 | Quantification | Salmon | `salmon_quant.nf` | biocontainers |
+| Quantification | NanoCount (opt-in) | `nanocount.nf` (+ `minimap2_nanocount.nf`) | biocontainers |
 | m6A | m6anet | `m6anet.nf` | biocontainers |
 | Comparative mod | Nanocompore | `nanocompore_collapse.nf`, `nanocompore_sampcomp.nf` | biocontainers |
 | Error-based mod | ELIGOS | `eligos_pairdiff.nf` | `piroonj/eligos2` |

@@ -140,9 +140,10 @@ workflow DRNASEQ {
     // 5. Quantification — Salmon (spec §5.4), reference mode only
     // ------------------------------------------------------------------------
     if (params.mode == 'reference' && !params.skip_quantification) {
-        QUANTIFY ( ch_txome_bam, ch_txome_fa )
+        QUANTIFY ( ch_txome_bam, ch_txome_fa, ch_fastq )
         ch_versions   = ch_versions.mix(QUANTIFY.out.versions)
         ch_multiqc_in = ch_multiqc_in.mix(QUANTIFY.out.multiqc_files)
+        ch_report     = ch_report.mix(QUANTIFY.out.nanocount.map { meta, f -> f })
     }
 
     // ------------------------------------------------------------------------

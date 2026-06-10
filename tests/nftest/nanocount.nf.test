@@ -1,0 +1,23 @@
+nextflow_process {
+
+    name "NANOCOUNT module (stub)"
+    script "modules/local/nanocount.nf"
+    process "NANOCOUNT"
+
+    test("emits counts table and versions") {
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] = [ [ id:'WT_rep1' ],
+                             file("\${projectDir}/tests/data/wt_rep1.fastq.gz") ]
+                """
+            }
+        }
+        then {
+            assert process.success
+            assert process.out.counts.size() == 1
+            assert path(process.out.versions.get(0)).getText().contains("nanocount")
+        }
+    }
+}

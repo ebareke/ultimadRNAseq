@@ -5,6 +5,16 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added — NanoCount quantifier (resolves the SRS "Nexxons")
+- `NANOCOUNT` (ONT EM transcript-abundance estimator) as a second quantifier
+  alongside Salmon, opt-in via `--run_nanocount` (default off)
+- `MINIMAP2_NANOCOUNT`: NanoCount-specific transcriptome alignment — secondary
+  alignments kept (`-N 10`) and **query-ordered (not coord-sorted)**, since
+  NanoCount groups by read and Salmon's coord-sorted BAM is unusable for it
+- Wired into the `QUANTIFY` subworkflow; outputs per-sample
+  `quantification/nanocount/<sample>.nanocount.tsv`; fed into the summary report
+- `test` profile sets `run_nanocount=true`; module nf-test added. 6/6 tests pass.
+
 ### Added — Apptainer & HPC
 - All 21 tool modules now select the Galaxy-depot **Singularity/Apptainer**
   image under `-profile apptainer`/`hpc` (engine `apptainer` is recognised, not

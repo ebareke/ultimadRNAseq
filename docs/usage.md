@@ -72,6 +72,7 @@ local (absolute, or relative to the launch dir / project dir) or remote URLs
 | `--skip_qc` | false | skip NanoPlot/ToulligQC/pycoQC |
 | `--skip_alignment` | false | skip Minimap2 |
 | `--skip_quantification` | false | skip Salmon (reference mode) |
+| `--run_nanocount` | false | also quantify with NanoCount (ONT EM estimator) |
 | `--run_dorado` | false | basecall POD5/FAST5 with Dorado (GPU) |
 | `--run_f5c` | false | f5c event alignment (needed by m6anet/Nanocompore) |
 | `--skip_modifications` | true | m6anet, Nanocompore, ELIGOS, nanoRMS |
