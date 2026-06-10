@@ -13,6 +13,7 @@ detection and poly(A) tail analysis, with HTML/PDF reporting and a GUI.
 - **[[Modules-and-Tools]]** — every tool and what it does
 - **[[Real-Data-Runs]]** — SG-NEx (FASTQ) and signal+GPU runbooks
 - **[[Containers]]** — building the custom images
+- **[[HPC]]** — SLURM + Apptainer, GHCR SIFs, GPU
 - **[[Development]]** — architecture & extending the pipeline
 - **[[FAQ]]**
 
@@ -23,7 +24,7 @@ detection and poly(A) tail analysis, with HTML/PDF reporting and a GUI.
 | Inputs | POD5, FAST5 (→POD5), FASTQ; local or remote URLs |
 | Signal / basecalling | Dorado (GPU), f5c, pod5 |
 | QC | NanoPlot, ToulligQC, pycoQC, MultiQC |
-| Alignment / quant | Minimap2 (splice + map-ont), Salmon |
+| Alignment / quant | Minimap2 (splice + map-ont), Salmon, NanoCount (opt-in) |
 | RNA modifications | m6anet, Nanocompore, ELIGOS, nanoRMS |
 | Poly(A)/(U) | nanopolish polya, tailfindr |
 | De novo | RATTLE, StringTie2, gffcompare |

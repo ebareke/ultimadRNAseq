@@ -7,7 +7,7 @@ recipe and ship as buildable images under `containers/`: **tailfindr** and
 
 ## Build & push (automated — recommended)
 
-A GitHub Actions workflow builds and pushes all three to Docker Hub. Add two
+A GitHub Actions workflow builds and pushes both to Docker Hub. Add two
 repository secrets (Settings ▸ Secrets and variables ▸ Actions):
 
 | Secret | Value |
@@ -31,12 +31,22 @@ Pin upstream refs for reproducibility:
 
 ## Apptainer (HPC)
 
-Nextflow pulls these Docker images automatically under `-profile apptainer`.
-Pre-build SIFs if you prefer:
+Bioconda tools use Galaxy-depot Singularity images directly under `-profile
+apptainer`/`hpc`. For the custom tools, the **`Apptainer images (HPC)`**
+workflow (`.github/workflows/apptainer.yml`) builds SIFs on GitHub, smoke-tests
+each under Apptainer, and publishes them to **GHCR**:
+
+```bash
+apptainer pull oras://ghcr.io/ebareke/tailfindr-apptainer:1.4   # pre-seed HPC cache
+```
+
+Or build a SIF yourself from the Docker image:
 
 ```bash
 apptainer build tailfindr_1.4.sif docker://ebareke/tailfindr:1.4
 ```
+
+See [[HPC]] for the full HPC/Apptainer guide.
 
 ## Production pinning
 

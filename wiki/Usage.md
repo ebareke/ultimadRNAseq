@@ -35,6 +35,7 @@ nextflow run . -profile <engine> --input samplesheet.csv \
 - `--mode reference` (default) | `--mode denovo` — see [[Workflow-Modes]].
 - Signal/epitranscriptomics are opt-in: `--run_dorado`, `--run_f5c`,
   `--skip_modifications false`, `--skip_polya false`.
+- `--run_nanocount` adds NanoCount as a second quantifier alongside Salmon.
 - Skip stages with `--skip_qc/alignment/quantification/denovo/multiqc/report`.
 
 ## Profiles

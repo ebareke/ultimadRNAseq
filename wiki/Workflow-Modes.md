@@ -9,7 +9,8 @@ reads → QC → Minimap2 (genome, splice-aware) ─┐
 ```
 
 - Genome alignment: `-ax splice -uf -k14` (direct-RNA forward strand).
-- Transcriptome alignment: `-ax map-ont` → Salmon abundance.
+- Transcriptome alignment: `-ax map-ont` → Salmon abundance (+ NanoCount with
+  `--run_nanocount`, which does its own `-N 10` query-ordered alignment).
 - Needs `--fasta` (+ `--gtf`) and/or `--transcript_fasta`.
 
 ## De novo (`--mode denovo`)

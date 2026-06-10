@@ -7,5 +7,6 @@
 - [[Modules-and-Tools]]
 - [[Real-Data-Runs]]
 - [[Containers]]
+- [[HPC]]
 - [[Development]]
 - [[FAQ]]
