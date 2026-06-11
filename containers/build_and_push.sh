@@ -22,11 +22,11 @@ PUSH="${PUSH:-true}"
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # image -> tag and build-arg name  (RATTLE uses the Bioconda biocontainer; not built here)
-declare -A TAG=( [tailfindr]=1.4 [nanorms]=2.0 )
-declare -A ARG=( [tailfindr]=TAILFINDR_REF [nanorms]=NANORMS_REF )
+declare -A TAG=( [tailfindr]=1.4 [nanorms]=2.0 [uncalled4]=4.1.0 )
+declare -A ARG=( [tailfindr]=TAILFINDR_REF [nanorms]=NANORMS_REF [uncalled4]=UNCALLED4_VERSION )
 
 targets=("${@:-}")
-[ -z "${targets[*]}" ] && targets=(tailfindr nanorms)
+[ -z "${targets[*]}" ] && targets=(tailfindr nanorms uncalled4)
 
 if [ "$PUSH" = "true" ]; then
     : "${DOCKERHUB_TOKEN:?Set DOCKERHUB_TOKEN in the environment (do not hardcode)}"

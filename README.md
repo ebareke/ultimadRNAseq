@@ -21,11 +21,11 @@ provenance.
 
 | Stage | Tools |
 |-------|-------|
-| Signal & basecalling (opt-in) | **Dorado** (GPU), **f5c**, **pod5** (FAST5→POD5) |
+| Signal & basecalling (opt-in) | **Dorado** (GPU), **f5c**, **Uncalled4**, **pod5** (FAST5→POD5) |
 | Quality control | **NanoPlot**, **ToulligQC**, **pycoQC**, **MultiQC** |
 | Alignment | **Minimap2** (splice-aware genome + `map-ont` transcriptome) |
 | Quantification | **Salmon**; **NanoCount** (opt-in, ONT EM estimator) |
-| RNA modifications (opt-in) | **m6anet**, **Nanocompore**, **ELIGOS**, **nanoRMS** |
+| RNA modifications (opt-in) | **m6anet**, **Nanocompore**, **ELIGOS**, **nanoRMS** (replicate-aware contrasts) |
 | Poly(A)/(U) (opt-in) | **nanopolish polya**, **tailfindr** |
 | De novo discovery | **RATTLE** (reference-free), **StringTie2** + **gffread** + **gffcompare** |
 | Reporting | **MultiQC** + unified **Quarto** HTML/PDF report + **Streamlit** GUI |
@@ -34,7 +34,9 @@ Inputs: POD5, FAST5 (auto-converted to POD5), FASTQ — local paths or remote
 URLs (`http(s)://`, `s3://`). Signal/modification/poly(A) stages are opt-in and
 produce no tasks at FASTQ entry.
 
-> Uncalled4 (spec §5.2) is deferred; f5c covers signal-to-reference alignment.
+Comparative modification tools build **replicate-aware** contrasts: samples are
+grouped by `condition` (with the `control` flag marking the pooled background),
+not paired one-by-one.
 
 ## Quick start
 

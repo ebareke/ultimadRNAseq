@@ -35,6 +35,8 @@ jobs:
             tag: '1.4'
           - tool: nanorms
             tag: '2.0'
+          - tool: uncalled4
+            tag: '4.1.0'
     steps:
       - uses: actions/checkout@v4
 

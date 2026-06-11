@@ -49,5 +49,7 @@ Phased delivery plan for `directRNA`. Each phase is independently demoable.
 
 - SG-NEx FASTQ run and signal + GPU run (runbooks in `docs/`).
 - Numerical validation of outputs against published results.
-- Deferred: Uncalled4 (f5c covers signal-to-reference); replicate-aware
-  contrast grouping for the comparative modification tools.
+
+(Previously-deferred items now done: **Uncalled4** signal-to-reference
+alignment, and **replicate-aware** contrast grouping for the comparative
+modification tools.)

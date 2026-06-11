@@ -8,8 +8,10 @@ process NANOCOMPORE_SAMPCOMP {
         'biocontainers/nanocompore:1.0.4--pyhdfd78af_0' }"
 
     input:
-    // meta describes the contrast: id = "<test>_vs_<control>"
-    tuple val(meta), path(test_collapse), path(control_collapse)
+    // meta describes the contrast: id = "<condition>_vs_control". test_collapse
+    // and control_collapse are LISTS of per-replicate collapse dirs, staged into
+    // test/ and control/ so each side's replicate files can be globbed.
+    tuple val(meta), path(test_collapse, stageAs: 'test/*'), path(control_collapse, stageAs: 'control/*')
     path  fasta   // transcriptome/genome reference the eventalign was made against
 
     output:
@@ -22,8 +24,8 @@ process NANOCOMPORE_SAMPCOMP {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     nanocompore sampcomp \\
-        --file_list1 \$(ls ${control_collapse}/*_eventalign_collapse.tsv | paste -sd, -) \\
-        --file_list2 \$(ls ${test_collapse}/*_eventalign_collapse.tsv | paste -sd, -) \\
+        --file_list1 \$(ls control/*/*_eventalign_collapse.tsv | paste -sd, -) \\
+        --file_list2 \$(ls test/*/*_eventalign_collapse.tsv | paste -sd, -) \\
         --label1 ${meta.control} \\
         --label2 ${meta.test} \\
         --fasta $fasta \\

@@ -15,6 +15,7 @@ resolve.
 |------|--------|-----------|------------|
 | tailfindr (poly-A) | `modules/local/tailfindr.nf` | `containers/tailfindr/` | `ebareke/tailfindr:1.4` |
 | nanoRMS (modifications) | `modules/local/nanorms.nf` | `containers/nanorms/` | `ebareke/nanorms:2.0` |
+| uncalled4 (signal align) | `modules/local/uncalled4_align.nf` | `containers/uncalled4/` | `ebareke/uncalled4:4.1.0` |
 
 RATTLE **is** on Bioconda — it uses the standard biocontainer
 (`biocontainers/rattle:1.0--h5ca1c30_0`), no custom build needed.
@@ -51,10 +52,12 @@ Pin each upstream `*_REF` build-arg to a commit SHA / release tag for
 reproducibility, then build and push (replace `ebareke` with your registry):
 
 ```bash
-docker build -t ebareke/tailfindr:1.4 --build-arg TAILFINDR_REF=<tag> containers/tailfindr
-docker build -t ebareke/nanorms:2.0   --build-arg NANORMS_REF=<sha>   containers/nanorms
+docker build -t ebareke/tailfindr:1.4  --build-arg TAILFINDR_REF=<tag>       containers/tailfindr
+docker build -t ebareke/nanorms:2.0    --build-arg NANORMS_REF=<sha>         containers/nanorms
+docker build -t ebareke/uncalled4:4.1.0 --build-arg UNCALLED4_VERSION=4.1.0  containers/uncalled4
 docker push ebareke/tailfindr:1.4
 docker push ebareke/nanorms:2.0
+docker push ebareke/uncalled4:4.1.0
 ```
 
 ### Apptainer / Singularity (HPC)

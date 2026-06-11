@@ -48,6 +48,10 @@ jobs:
             tag: 'v2.1.0'
             image: 'docker://docker.io/piroonj/eligos2:v2.1.0'
             test: 'ls / >/dev/null'
+          - name: uncalled4
+            tag: '4.1.0'
+            image: 'docker://docker.io/ebareke/uncalled4:4.1.0'
+            test: 'uncalled4 --version'
     env:
       SIF_NAME: ${{ matrix.name }}
       SIF_TAG: ${{ matrix.tag }}

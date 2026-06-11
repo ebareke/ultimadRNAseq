@@ -75,6 +75,7 @@ local (absolute, or relative to the launch dir / project dir) or remote URLs
 | `--run_nanocount` | false | also quantify with NanoCount (ONT EM estimator) |
 | `--run_dorado` | false | basecall POD5/FAST5 with Dorado (GPU) |
 | `--run_f5c` | false | f5c event alignment (needed by m6anet/Nanocompore) |
+| `--run_uncalled4` | false | Uncalled4 signal-to-reference alignment (alt. to f5c) |
 | `--skip_modifications` | true | m6anet, Nanocompore, ELIGOS, nanoRMS |
 | `--skip_polya` | true | nanopolish polya, tailfindr |
 | `--skip_denovo` | true | RATTLE/StringTie2 (denovo mode) |

@@ -5,6 +5,20 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added — Uncalled4 + replicate-aware contrasts (resolve deferred items)
+- **Uncalled4** (`UNCALLED4_ALIGN`, spec §5.2): signal-to-reference alignment as
+  an alternative to f5c, opt-in via `--run_uncalled4`; custom image
+  (`containers/uncalled4`, PyPI `uncalled4==4.1.0`), built by CI.
+- **Replicate-aware comparative contrasts**: the MODIFICATIONS subworkflow now
+  groups samples by `condition` (with `control=true` pooled as the background)
+  instead of pairing samples one-by-one (was a Cartesian product):
+  - Nanocompore — replicate collapse files passed as `--file_list1/2` per group
+    (`NANOCOMPORE_SAMPCOMP` now stages `test/` + `control/` replicate lists).
+  - ELIGOS / nanoRMS — per-condition replicate BAMs merged (`SAMTOOLS_MERGE`)
+    then the merged condition BAMs paired. Contrast id = `<condition>_vs_control`.
+- `test_signal` sets `run_uncalled4=true`; full path stub-runs green (40 tasks).
+  nf-test 6/6.
+
 ### Added — NanoCount quantifier (resolves the SRS "Nexxons")
 - `NANOCOUNT` (ONT EM transcript-abundance estimator) as a second quantifier
   alongside Salmon, opt-in via `--run_nanocount` (default off)

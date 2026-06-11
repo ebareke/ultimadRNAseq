@@ -1,13 +1,13 @@
 # Containers
 
 Most tools use **biocontainers** referenced directly in each module — nothing to
-do (including **RATTLE**, which is on Bioconda). Two tools have no Bioconda
-recipe and ship as buildable images under `containers/`: **tailfindr** and
-**nanoRMS**. ELIGOS uses the author's image `piroonj/eligos2`.
+do (including **RATTLE**, which is on Bioconda). Three tools have no Bioconda
+recipe and ship as buildable images under `containers/`: **tailfindr**,
+**nanoRMS** and **uncalled4**. ELIGOS uses the author's image `piroonj/eligos2`.
 
 ## Build & push (automated — recommended)
 
-A GitHub Actions workflow builds and pushes both to Docker Hub. Add two
+A GitHub Actions workflow builds and pushes all three to Docker Hub. Add two
 repository secrets (Settings ▸ Secrets and variables ▸ Actions):
 
 | Secret | Value |
